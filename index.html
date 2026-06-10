@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KoSwap — Preloved Anak Kos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #F47B20; --orange-dark: #d96a10; --orange-light: #FFF0E0;
+      --cream: #F7F0E3; --cream2: #EDE3D0; --white: #FFFFFF;
+      --text-dark: #222; --text-mid: #555; --text-light: #999;
+      --border: #E8DDD0; --radius: 18px; --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08); --font: 'Nunito', sans-serif;
+    }
+    body { font-family: var(--font); background: var(--cream); color: var(--text-dark); min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: var(--font); border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+    svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* PAGE SYSTEM */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+    #page-login.active, #page-daftar.active { display: flex; align-items: center; justify-content: center; }
+    #page-chat.active { display: flex; flex-direction: column; }
+
+    /* LOGO */
+    .logo { font-size: 1.8rem; font-weight: 900; color: var(--orange); cursor: pointer; letter-spacing: -0.5px; }
+    .logo span { color: var(--text-dark); }
+    .logo-white { color: #fff; } .logo-white span { color: #fff; }
+
+    /* BUTTONS */
+    .btn-orange { background: var(--orange); color: #fff; font-weight: 700; font-size: 0.95rem; padding: 10px 22px; border-radius: 50px; transition: background 0.2s, transform 0.1s; }
+    .btn-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .btn-full { width: 100%; padding: 14px; font-size: 1rem; border-radius: 50px; }
+    .btn-outline-orange { border: 2px solid var(--orange); color: var(--orange); font-weight: 700; padding: 10px 20px; border-radius: 50px; background: transparent; transition: all 0.2s; }
+    .btn-outline-orange:hover { background: var(--orange-light); }
+    .btn-sm { padding: 7px 16px; font-size: 0.85rem; }
+
+    /* NAVBAR */
+    .navbar { display: flex; align-items: center; gap: 16px; padding: 12px 32px; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .search-bar { flex: 1; display: flex; align-items: center; gap: 10px; background: var(--cream); border: 2px solid var(--border); border-radius: 50px; padding: 8px 18px; transition: border-color 0.2s; }
+    .search-bar:focus-within { border-color: var(--orange); }
+    .search-bar input { flex: 1; border: none; background: transparent; font-size: 0.95rem; color: var(--text-dark); outline: none; }
+    .search-bar svg { color: var(--text-light); flex-shrink: 0; }
+    .nav-icons { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--cream); color: var(--text-mid); border: 2px solid var(--border); transition: all 0.2s; }
+    .icon-btn:hover, .icon-btn.active-icon { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .btn-jual { display: flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 12px; font-weight: 800; }
+    .btn-jual svg { width: 16px; height: 16px; }
+
+    /* LANDING */
+    #page-landing { background: var(--cream); }
+    .nav-landing { display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; }
+    .nav-links { display: flex; align-items: center; gap: 20px; }
+    .link-masuk { font-weight: 700; font-size: 1rem; color: var(--text-dark); transition: color 0.2s; }
+    .link-masuk:hover { color: var(--orange); }
+    .landing-hero { display: flex; align-items: center; justify-content: space-between; padding: 60px 60px 80px; gap: 40px; }
+    .landing-left { flex: 1; max-width: 560px; }
+    .badge-preloved { display: inline-block; border: 2px solid var(--orange); color: var(--orange); font-weight: 800; font-size: 0.8rem; padding: 8px 20px; border-radius: 50px; letter-spacing: 1px; margin-bottom: 24px; }
+    .landing-left h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.1; color: var(--text-dark); margin-bottom: 20px; }
+    .landing-left p { font-size: 1.05rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 36px; }
+    .btn-hero { font-size: 1.1rem; padding: 14px 32px; }
+    .landing-right { flex: 1; display: flex; justify-content: center; }
+    .hero-img-wrap { width: 420px; height: 380px; border-radius: 40px; overflow: hidden; background: var(--cream2); box-shadow: var(--shadow); }
+    .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .landing-features { display: flex; gap: 24px; padding: 0 60px 80px; }
+    .feature-card { flex: 1; background: var(--white); border-radius: 20px; padding: 28px 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
+    .feature-icon { font-size: 2rem; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 800; }
+    .feature-card p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.5; }
+
+    /* AUTH */
+    #page-login, #page-daftar { min-height: 100vh; background: var(--cream); padding: 40px 20px; }
+    .auth-wrap { display: flex; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.12); width: 100%; max-width: 820px; min-height: 480px; }
+    .auth-left { background: var(--orange); flex: 1; padding: 50px 40px; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
+    .auth-tagline { font-size: 1.5rem; font-weight: 800; color: #fff; line-height: 1.4; margin-top: 16px; }
+    .auth-right { flex: 1; padding: 50px 44px; background: var(--white); display: flex; flex-direction: column; justify-content: center; }
+    .auth-right h2 { font-size: 2rem; font-weight: 900; margin-bottom: 28px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 1.2px; color: var(--text-mid); margin-bottom: 8px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; font-size: 0.95rem; background: var(--cream); outline: none; transition: border-color 0.2s; color: var(--text-dark); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); background: #fff; }
+    .form-group textarea { resize: vertical; }
+    .back-link { display: block; text-align: center; margin-top: 14px; font-weight: 700; color: var(--text-mid); font-size: 0.95rem; }
+    .back-link:hover { color: var(--orange); }
+    .switch-auth { text-align: center; margin-top: 10px; font-size: 0.88rem; color: var(--text-mid); }
+    .switch-auth a { color: var(--orange); font-weight: 700; }
+
+    /* BERANDA */
+    .beranda-layout { display: flex; gap: 0; min-height: calc(100vh - 70px); }
+    .kategori-sidebar { width: 220px; flex-shrink: 0; padding: 30px 20px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid var(--border); background: var(--white); }
+    .kategori-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; color: var(--text-mid); padding: 0 8px; margin-bottom: 8px; }
+    .kat-item { padding: 12px 18px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; color: var(--text-mid); text-align: left; transition: all 0.2s; }
+    .kat-item:hover { background: var(--cream); color: var(--text-dark); }
+    .kat-item.active { background: var(--orange); color: #fff; }
+    .produk-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 28px; align-content: start; }
+    
+    /* PRODUCT CARD */
+    .produk-card { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+    .produk-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.13); }
+    .produk-card-img { width: 100%; height: 160px; object-fit: cover; display: block; }
+    .produk-card-body { padding: 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+    .produk-card-info { flex: 1; min-width: 0; }
+    .produk-card-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+    .produk-card-harga { font-size: 0.95rem; font-weight: 900; color: var(--orange); }
+    .btn-save { width: 36px; height: 36px; border-radius: 10px; background: var(--cream); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--text-light); transition: all 0.2s; }
+    .btn-save:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-save.saved { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+    .btn-save svg { width: 16px; height: 16px; }
+
+    /* SOLD OUT BADGE */
+    .sold-out-badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.75); color: #fff; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 50px; letter-spacing: 0.5px; }
+    .produk-card.sold-out .produk-card-img { filter: grayscale(60%); }
+    .produk-card.sold-out .produk-card-harga { color: var(--text-light); text-decoration: line-through; }
+
+    /* DETAIL */
+    .detail-wrap { display: flex; gap: 0; min-height: calc(100vh - 70px); }
+    .detail-img-col { flex: 1; max-width: 50%; position: sticky; top: 70px; height: calc(100vh - 70px); position: relative; }
+    .detail-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .detail-sold-overlay { position: absolute; bottom: 24px; left: 24px; background: rgba(0,0,0,0.72); color: #fff; padding: 10px 22px; border-radius: 50px; font-weight: 800; font-size: 1rem; letter-spacing: 1px; display: none; }
+    .detail-info-col { flex: 1; padding: 40px; overflow-y: auto; max-height: calc(100vh - 70px); }
+    .detail-kategori { display: inline-block; background: var(--orange-light); color: var(--orange); font-size: 0.8rem; font-weight: 800; padding: 6px 16px; border-radius: 50px; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .detail-info-col h2 { font-size: 2.2rem; font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+    .detail-harga { font-size: 2rem; font-weight: 900; color: var(--orange); margin-bottom: 28px; }
+    .detail-section-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; color: var(--text-mid); margin-bottom: 12px; }
+    .detail-deskripsi { background: var(--cream); border-left: 4px solid var(--orange); border-radius: 12px; padding: 16px 20px; font-size: 0.95rem; line-height: 1.6; color: var(--text-dark); font-style: italic; margin-bottom: 24px; }
+    .detail-penjual { display: flex; align-items: center; gap: 14px; background: var(--white); border: 2px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 28px; cursor: pointer; transition: border-color 0.2s; }
+    .detail-penjual:hover { border-color: var(--orange); }
+    .detail-penjual img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .pjl-name { font-weight: 800; font-size: 0.95rem; }
+    .pjl-sub { font-size: 0.82rem; color: var(--text-mid); }
+    .detail-actions { display: flex; gap: 12px; }
+    .detail-actions .btn-outline-orange, .detail-actions .btn-orange { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 14px 20px; border-radius: 14px; font-weight: 800; }
+    .detail-actions svg { width: 18px; height: 18px; }
+
+    /* SOLD OUT notice in detail */
+    .sold-out-notice { background: #fde8e8; border: 2px solid #e53935; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 700; color: #c62828; font-size: 0.92rem; }
+    .sold-out-notice svg { color: #c62828; flex-shrink: 0; }
+
+    /* PENJUAL SOLD OUT toggle */
+    .btn-sold-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 14px; font-weight: 800; font-size: 0.88rem; transition: all 0.2s; }
+    .btn-sold-toggle.mark-sold { background: #fde8e8; color: #c62828; border: 2px solid #e53935; }
+    .btn-sold-toggle.mark-sold:hover { background: #e53935; color: #fff; }
+    .btn-sold-toggle.mark-avail { background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; }
+    .btn-sold-toggle.mark-avail:hover { background: #4caf50; color: #fff; }
+
+    /* CHAT */
+    #page-chat { height: 100vh; flex-direction: column; }
+    #page-chat .navbar { flex-shrink: 0; }
+    .chat-layout { display: flex; flex: 1; overflow: hidden; }
+    .chat-sidebar { width: 310px; flex-shrink: 0; background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+    .chat-role-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--white); flex-shrink: 0; }
+    .chat-role-tab { flex: 1; padding: 12px 8px; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.5px; color: var(--text-mid); background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+    .chat-role-tab svg { width: 15px; height: 15px; }
+    .chat-role-tab.active { color: var(--orange); border-bottom-color: var(--orange); background: var(--orange-light); }
+    .chat-role-tab:hover:not(.active) { color: var(--text-dark); background: var(--cream); }
+    .chat-role-badge { background: var(--orange); color: #fff; font-size: 0.65rem; font-weight: 900; padding: 2px 6px; border-radius: 50px; min-width: 18px; text-align: center; }
+    .chat-search { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--cream); flex-shrink: 0; }
+    .chat-search input { flex: 1; border: none; background: transparent; outline: none; font-size: 0.88rem; }
+    .chat-search svg { color: var(--text-light); width: 15px; height: 15px; }
+    .chat-list { overflow-y: auto; flex: 1; }
+    .chat-list-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; gap: 10px; color: var(--text-light); text-align: center; }
+    .chat-list-empty .chat-empty-icon { font-size: 2.5rem; }
+    .chat-list-empty p { font-size: 0.85rem; font-weight: 600; line-height: 1.5; }
+    .chat-contact { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.2s; position: relative; }
+    .chat-contact:hover, .chat-contact.active { background: var(--orange-light); }
+    .chat-contact img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .chat-contact-info { flex: 1; min-width: 0; }
+    .chat-contact-name { font-weight: 800; font-size: 0.88rem; }
+    .chat-contact-last { font-size: 0.78rem; color: var(--text-mid); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-contact-time { font-size: 0.72rem; color: var(--text-light); flex-shrink: 0; }
+    .chat-unread-badge { background: var(--orange); color: #fff; font-size: 0.7rem; font-weight: 900; min-width: 20px; height: 20px; border-radius: 50px; display: flex; align-items: center; justify-content: center; padding: 0 5px; margin-top: 4px; }
+    .chat-contact-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .chat-contact.unread .chat-contact-name { font-weight: 900; }
+    .chat-contact.unread .chat-contact-last { color: var(--text-dark); font-weight: 600; }
+    .chat-role-pill { font-size: 0.65rem; font-weight: 900; padding: 2px 8px; border-radius: 50px; letter-spacing: 0.5px; display: inline-block; margin-top: 3px; }
+    .pill-buyer { background: #e3f2fd; color: #1565c0; }
+    .pill-seller { background: #e8f5e9; color: #2e7d32; }
+    .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--cream); overflow: hidden; }
+    .chat-header { display: flex; align-items: center; gap: 12px; padding: 13px 20px; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .chat-header img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+    .chat-header-info { flex: 1; }
+    .chat-header-info span { font-weight: 800; font-size: 0.98rem; }
+    .chat-header-info small { display: block; font-size: 0.75rem; color: var(--text-mid); }
+    .chat-header-role { font-size: 0.7rem; font-weight: 800; padding: 2px 10px; border-radius: 50px; letter-spacing: 0.5px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-day-divider { text-align: center; font-size: 0.78rem; color: var(--text-light); background: var(--cream2); padding: 4px 14px; border-radius: 50px; align-self: center; margin: 6px 0; }
+    .msg-bubble { max-width: 65%; min-width: 60px; padding: 11px 15px; border-radius: 18px; font-size: 0.92rem; line-height: 1.5; word-break: break-word; overflow-wrap: break-word; display: flex; flex-direction: column; }
+    .msg-bubble.incoming { background: var(--white); border-bottom-left-radius: 4px; align-self: flex-start; box-shadow: 0 2px 8px rgba(0,0,0,0.06); color: var(--text-dark); }
+    .msg-bubble.outgoing { background: var(--orange); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+    .bubble-text { display: block; white-space: pre-wrap; word-break: break-word; }
+    .bubble-text { display: block; white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+    .msg-time { font-size: 0.7rem; opacity: 0.7; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+    .msg-time.outgoing-time { justify-content: flex-end; }
+    .msg-time.incoming-time { justify-content: flex-start; }
+    /* Centang baca ala Shopee */
+    .read-tick { font-size: 0.72rem; }
+    .read-tick.read { color: #4fc3f7; }
+    .read-tick.sent { opacity: 0.6; }
+    /* Warning harga di bawah threshold */
+    .nego-warning { background: #fff3cd; border-left: 3px solid #f5c842; border-radius: 0 0 10px 10px; padding: 7px 14px; font-size: 0.78rem; font-weight: 700; color: #856404; display: flex; align-items: center; gap: 6px; }
+
+    /* NEGO CARD */
+    .msg-nego-card { background: var(--white); border: 2px solid var(--border); border-radius: 16px; overflow: visible; max-width: 320px; min-width: 260px; align-self: flex-start; box-shadow: 0 2px 12px rgba(0,0,0,0.10); display: flex; flex-direction: column; }
+    .msg-nego-card.outgoing-nego { align-self: flex-end; border-color: var(--orange); background: var(--orange-light); }
+    .nego-header-label { font-size: 0.68rem; font-weight: 900; letter-spacing: 1px; color: var(--orange); padding: 8px 12px 0 12px; text-transform: uppercase; }
+    .nego-inner { display: flex; align-items: center; gap: 12px; padding: 10px 12px 12px 12px; min-height: 88px; }
+    .nego-img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; flex-shrink: 0; border: 2px solid var(--border); background: var(--cream2); }
+    .nego-details { flex: 1; min-width: 0; }
+    .nego-details .nego-name { font-weight: 800; font-size: 0.88rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); }
+    .nego-details .nego-harga-coret { text-decoration: line-through; color: var(--text-light); font-size: 0.78rem; }
+    .nego-details .nego-harga-label { font-size: 0.7rem; font-weight: 700; color: var(--text-mid); margin-top: 2px; }
+    .nego-details .nego-harga-deal { font-weight: 900; font-size: 1.1rem; color: var(--orange); }
+    .nego-status-bar { padding: 8px 12px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; border-top: 1px solid rgba(0,0,0,0.06); border-radius: 0 0 14px 14px; }
+    .nego-status-bar.accepted { background: #e8f5e9; color: #2e7d32; }
+    .nego-status-bar.rejected { background: #fde8e8; color: #c62828; }
+    .nego-status-bar.pending { background: #fff8e1; color: #856404; }
+    .nego-actions { display: flex; gap: 0; border-top: 1px solid rgba(0,0,0,0.06); border-radius: 0 0 14px 14px; overflow: hidden; }
+    .nego-actions button { flex: 1; padding: 11px 8px; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 5px; transition: opacity 0.2s; border: none; cursor: pointer; font-family: var(--font); }
+    .nego-actions button svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .btn-nego-terima { background: #43a047; color: #fff; }
+    .btn-nego-terima:hover { background: #388e3c; }
+    .btn-nego-tolak { background: #f5f5f5; color: #e53935; border-left: 1px solid rgba(0,0,0,0.06) !important; }
+    .btn-nego-tolak:hover { background: #fde8e8; }
+    .chat-produk-bar { display: flex; align-items: center; gap: 10px; padding: 10px 20px; background: var(--orange-light); border-bottom: 1px solid #f5d9b8; flex-shrink: 0; cursor: pointer; transition: background 0.2s; }
+    .chat-produk-bar:hover { background: #ffe8cc; }
+    .chat-produk-bar img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--orange); }
+    .chat-produk-bar-info { flex: 1; min-width: 0; }
+    .chat-produk-bar-nama { font-weight: 800; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-produk-bar-harga { font-size: 0.78rem; color: var(--orange); font-weight: 700; }
+    .chat-produk-bar-label { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.5px; color: var(--text-light); text-transform: uppercase; }
+    .chat-input-bar { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--white); border-top: 1px solid var(--border); flex-shrink: 0; }
+    .chat-input-wrap { flex: 1; display: flex; align-items: center; background: var(--cream); border: 2px solid var(--border); border-radius: 50px; padding: 8px 16px; gap: 8px; transition: border-color 0.2s; }
+    .chat-input-wrap:focus-within { border-color: var(--orange); }
+    .chat-input-wrap input { flex: 1; border: none; background: transparent; outline: none; font-size: 0.92rem; }
+    .chat-input-wrap svg { color: var(--text-light); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+    .chat-input-wrap svg:hover { color: var(--orange); }
+    .btn-send { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+    .btn-send svg { width: 16px; height: 16px; }
+    .no-chat-selected { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--text-light); }
+    .no-chat-selected .big-icon { font-size: 3.5rem; }
+    .no-chat-selected p { font-size: 0.95rem; font-weight: 600; }
+    .no-chat-selected small { font-size: 0.82rem; color: var(--text-light); text-align: center; max-width: 240px; line-height: 1.5; }
+
+    /* LOGIN-WALL notice */
+    .login-wall-notice { background: #fff3cd; border: 2px solid #f5c842; border-radius: 14px; padding: 16px 20px; text-align: center; margin: 20px 0; }
+    .login-wall-notice p { font-weight: 700; color: #856404; margin-bottom: 12px; }
+
+    /* PROFIL */
+    .profil-wrap { padding: 30px; max-width: 900px; margin: 0 auto; }
+    .profil-card { background: var(--white); border-radius: 24px; padding: 32px; box-shadow: var(--shadow); }
+    .profil-header { display: flex; align-items: flex-start; gap: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .profil-avatar-wrap { position: relative; }
+    .profil-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--orange); }
+    .profil-avatar-edit { position: absolute; bottom: 0; right: 0; width: 26px; height: 26px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .profil-avatar-edit svg { width: 13px; height: 13px; color: #fff; }
+    .profil-info { flex: 1; }
+    .profil-info h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 4px; }
+    .profil-username { color: var(--text-mid); font-size: 0.9rem; margin-bottom: 4px; }
+    .profil-bio { color: var(--text-mid); font-size: 0.88rem; margin-bottom: 10px; font-style: italic; }
+    .profil-meta { display: flex; flex-direction: column; gap: 5px; font-size: 0.88rem; color: var(--text-mid); }
+    .profil-btns { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    .profil-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-box { background: var(--cream); border: 2px solid var(--border); border-radius: 16px; padding: 18px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .stat-icon-box { font-size: 1.4rem; }
+    .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); }
+    .stat-lbl { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; color: var(--text-mid); }
+    .profil-iklan-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .iklan-badge { font-size: 0.82rem; font-weight: 800; color: var(--orange); background: var(--orange-light); padding: 6px 14px; border-radius: 50px; display: flex; align-items: center; gap: 6px; }
+    .profil-produk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; color: var(--text-light); grid-column: 1/-1; }
+    .empty-state .big-icon { font-size: 3.5rem; }
+    .empty-state p { font-size: 0.95rem; font-weight: 600; }
+
+    /* PROFIL GUEST (not logged in) */
+    .profil-guest { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 40px; gap: 16px; text-align: center; }
+    .profil-guest .big-icon { font-size: 4rem; }
+    .profil-guest h2 { font-size: 1.5rem; font-weight: 900; }
+    .profil-guest p { color: var(--text-mid); font-size: 0.95rem; line-height: 1.6; max-width: 360px; }
+    .profil-guest .btn-group { display: flex; gap: 12px; margin-top: 8px; }
+
+    /* SAVED */
+    .saved-wrap { padding: 30px; }
+    .saved-wrap h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 24px; }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 500; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--white); border-radius: 24px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+    .modal-sm { max-width: 480px; }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px 0; margin-bottom: 20px; }
+    .modal-header h3 { font-size: 1.5rem; font-weight: 900; }
+    .modal-close { width: 36px; height: 36px; border-radius: 10px; background: var(--cream); color: var(--text-mid); font-size: 1rem; display: flex; align-items: center; justify-content: center; font-weight: 800; transition: background 0.2s; }
+    .modal-close:hover { background: var(--cream2); }
+    .modal-body { padding: 0 28px 28px; }
+    .upload-area { border: 2.5px dashed var(--orange); border-radius: 16px; background: var(--orange-light); padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 20px; transition: background 0.2s; }
+    .upload-area:hover { background: #ffe8cc; }
+    .upload-area svg { width: 36px; height: 36px; color: var(--orange); }
+    .upload-area span { font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; color: var(--orange); }
+    .upload-area img { max-height: 140px; border-radius: 12px; }
+    .upload-progress { margin-top: 8px; font-size: 0.82rem; color: var(--orange); font-weight: 700; display: none; }
+
+    /* TAWAR */
+    .tawar-produk-preview { display: flex; gap: 16px; align-items: center; background: var(--cream); border-radius: 14px; padding: 14px; margin-bottom: 20px; }
+    .tawar-produk-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; flex-shrink: 0; border: 2px solid var(--orange); }
+    .tawar-preview-info .tawar-nama { font-weight: 800; font-size: 0.95rem; }
+    .tawar-preview-info .tawar-harga-asli { color: var(--orange); font-weight: 700; font-size: 0.88rem; margin-top: 4px; }
+    .harga-hint { font-size: 0.82rem; color: var(--text-light); margin-top: 6px; }
+
+    /* NAV AVATAR */
+    .nav-avatar-btn { overflow: hidden; padding: 0 !important; }
+    .nav-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; display: block; }
+
+    /* DEAL CARD */
+    .deal-card { background: var(--white); border: 2px solid #4caf50; border-radius: 16px; overflow: visible; max-width: 320px; min-width: 260px; align-self: flex-start; box-shadow: 0 3px 16px rgba(76,175,80,0.18); display: flex; flex-direction: column; }
+    .deal-card.outgoing-deal { align-self: flex-end; border-color: #43a047; }
+    .deal-card-header { font-size: 0.68rem; font-weight: 900; letter-spacing: 1px; color: #2e7d32; padding: 9px 14px 0 14px; text-transform: uppercase; }
+    .deal-card-inner { padding: 10px 14px 13px 14px; display: flex; align-items: center; gap: 12px; min-height: 76px; }
+    .deal-card-inner img { width: 58px; height: 58px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 2px solid #c8e6c9; background: #f1f8f1; }
+    .deal-card-info { flex: 1; min-width: 0; }
+    .deal-card-info .deal-nama { font-weight: 800; font-size: 0.88rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); }
+    .deal-card-info .deal-harga { font-weight: 900; font-size: 1.05rem; color: #2e7d32; }
+    .deal-card-footer { background: #f1f8e9; padding: 9px 14px; font-size: 0.82rem; font-weight: 700; color: #558b2f; display: flex; align-items: center; gap: 7px; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; }
+    .deal-card-footer-warn { background: #fff8e1; padding: 9px 14px; font-size: 0.82rem; font-weight: 700; color: #e65100; display: flex; align-items: center; gap: 7px; border-top: 1px solid #ffe0b2; border-radius: 0 0 14px 14px; }
+    .btn-konfirmasi-deal { width: 100%; padding: 11px 14px; background: #43a047; color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #c8e6c9; }
+    .btn-konfirmasi-deal:hover { background: #388e3c; }
+    .btn-terima-barang { width: 100%; padding: 11px 14px; background: #1976d2; color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #bbdefb; }
+    .btn-terima-barang:hover { background: #1565c0; }
+    .deal-done-bar { background: #e8f5e9; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; color: #2e7d32; text-align: center; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-dark); color: #fff; padding: 12px 28px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 9999; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* RATING PENJUAL */
+    .seller-rating-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .stars-display { display: flex; gap: 2px; }
+    .star { font-size: 0.9rem; color: #ddd; transition: color 0.15s; }
+    .star.filled { color: #f5a623; }
+    .star.half { color: #f5a623; }
+    .star.empty { color: #ddd; }
+    /* Rating di produk card */
+    .produk-card-rating { display: flex; align-items: center; gap: 3px; margin-top: 4px; }
+    .pc-stars { display: flex; gap: 1px; }
+    .pc-stars .star { font-size: 0.72rem; }
+    .pc-rating-num { font-size: 0.75rem; font-weight: 800; color: #f5a623; }
+    .pc-terjual { font-size: 0.7rem; color: var(--text-light); font-weight: 600; }
+    .rating-score { font-weight: 900; font-size: 0.88rem; color: var(--text-dark); }
+    .rating-count { font-size: 0.78rem; color: var(--text-light); }
+    .btn-rating { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 9px 18px; border-radius: 12px; background: #fff3cd; border: 2px solid #f5c842; color: #856404; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+    .btn-rating:hover { background: #fce97a; }
+    .btn-rating svg { width: 15px; height: 15px; color: #f5a623; }
+    /* Star picker bintang muncul setelah beli */
+    .star-picker { display: flex; justify-content: center; gap: 6px; margin: 8px 0 4px; }
+    .star-pick { font-size: 2rem; cursor: pointer; filter: grayscale(1) opacity(0.35); transition: filter 0.15s, transform 0.15s; }
+    .star-pick.lit { filter: none; transform: scale(1.15); }
+    .star-pick:hover { filter: none; transform: scale(1.2); }
+    /* Warning modal badge */
+    .nego-warning-pill { display: inline-flex; align-items: center; gap: 5px; background: #fff3cd; border: 1.5px solid #f5c842; border-radius: 50px; padding: 4px 12px; font-size: 0.75rem; font-weight: 800; color: #7d4e00; }
+
+    /* MODAL RATING */
+    .star-picker { display: flex; gap: 10px; justify-content: center; margin: 18px 0 10px; }
+    .star-pick { font-size: 2.2rem; cursor: pointer; filter: grayscale(1); transition: filter 0.15s, transform 0.12s; }
+    .star-pick.lit { filter: none; transform: scale(1.18); }
+    .rating-label { text-align: center; font-weight: 800; font-size: 1rem; color: var(--orange); min-height: 1.4em; margin-bottom: 8px; }
+
+    /* EDIT PROFIL */
+    .avatar-selector { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .avatar-option { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 3px solid transparent; transition: border-color 0.2s; }
+    .avatar-option.selected, .avatar-option:hover { border-color: var(--orange); }
+    .upload-avatar-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; border: 2px dashed var(--orange); color: var(--orange); font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; }
+    .upload-avatar-btn:hover { background: var(--orange-light); }
+
+  </style>
+</head>
+<body>
+
+<!-- ===================== LANDING ===================== -->
+<div id="page-landing" class="page active">
+  <nav class="nav-landing">
+    <div class="logo">Ko<span>Swap</span></div>
+    <div class="nav-links">
+      <a href="#" onclick="showPage('page-login')" class="link-masuk">Masuk</a>
+      <button class="btn-orange" onclick="showPage('page-daftar')">Daftar Sekarang</button>
+    </div>
+  </nav>
+  <div class="landing-hero">
+    <div class="landing-left">
+      <div class="badge-preloved">PRELOVED ANAK KOS</div>
+      <h1>Beresin Kosan<br>Jadi Cuan Kilat.</h1>
+      <p>Platform jual-beli barang bekas khusus area Banda Aceh.<br>Cari perlengkapan murah atau jual barang yang sudah<br>tidak terpakai ke sesama mahasiswa.</p>
+      <button class="btn-orange btn-hero" onclick="jelajahiBarang()">Jelajahi Barang →</button>
+    </div>
+    <div class="landing-right">
+      <div class="hero-img-wrap">
+        <img src="https://i.pinimg.com/1200x/64/e2/05/64e205006f2121022c8ad1c2e1914f39.jpg" alt="Ruangan Kos"/>
+      </div>
+    </div>
+  </div>
+  <div class="landing-features">
+    <div class="feature-card"><div class="feature-icon">🏷️</div><h3>Harga Terjangkau</h3><p>Temukan barang berkualitas dengan harga sesama mahasiswa.</p></div>
+    <div class="feature-card"><div class="feature-icon">💬</div><h3>Nego Langsung</h3><p>Chat dan tawar harga langsung dengan penjual.</p></div>
+    <div class="feature-card"><div class="feature-icon">🎓</div><h3>Khusus Mahasiswa</h3><p>Platform terpercaya khusus area Banda Aceh & sekitarnya.</p></div>
+    <div class="feature-card"><div class="feature-icon">♻️</div><h3>Ramah Lingkungan</h3><p>Kurangi limbah dengan memberi barang second life.</p></div>
+  </div>
+</div>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="page-login" class="page">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="logo logo-white">Ko<span>Swap</span></div>
+      <p class="auth-tagline">Tempat jual beli<br>barang dengan harga<br>bersahabat</p>
+    </div>
+    <div class="auth-right">
+      <h2>Masuk</h2>
+      <div class="form-group"><label>ALAMAT EMAIL</label><input type="email" placeholder="nama@gmail.com" id="login-email"/></div>
+      <div class="form-group"><label>KATA SANDI</label><input type="password" placeholder="••••••••" id="login-pass"/></div>
+      <button class="btn-orange btn-full" onclick="doLogin()">Masuk Sekarang</button>
+      <a href="#" class="back-link" onclick="showPage('page-landing')">Kembali</a>
+      <p class="switch-auth">Belum punya akun? <a href="#" onclick="showPage('page-daftar')">Daftar</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DAFTAR ===================== -->
+<div id="page-daftar" class="page">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <div class="logo logo-white">Ko<span>Swap</span></div>
+      <p class="auth-tagline">Tempat jual beli<br>barang dengan harga<br>bersahabat</p>
+    </div>
+    <div class="auth-right">
+      <h2>Daftar Akun</h2>
+      <div class="form-group"><label>NAMA LENGKAP</label><input type="text" placeholder="Nama Lengkap" id="daftar-nama"/></div>
+      <div class="form-group"><label>ALAMAT EMAIL</label><input type="email" placeholder="nama@gmail.com" id="daftar-email"/></div>
+      <div class="form-group"><label>KATA SANDI</label><input type="password" placeholder="••••••••" id="daftar-pass"/></div>
+      <button class="btn-orange btn-full" onclick="doDaftar()">Buat Akun</button>
+      <a href="#" class="back-link" onclick="showPage('page-landing')">Kembali</a>
+      <p class="switch-auth">Sudah punya akun? <a href="#" onclick="showPage('page-login')">Masuk</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== BERANDA ===================== -->
+<div id="page-beranda" class="page">
+  <nav class="navbar">
+    <div class="logo" onclick="showPage('page-beranda')">Ko<span>Swap</span></div>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Cari Kebutuhan Kosmu..." id="search-input" oninput="handleSearch(this.value)"/>
+    </div>
+    <div class="nav-icons">
+      <button class="icon-btn" onclick="showPage('page-saved')" title="Tersimpan"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="goToChat()" title="Chat" id="chat-icon-beranda"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="showPage('page-profil')" title="Profil" id="nav-profil-beranda" style="overflow:hidden;padding:0"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="btn-orange btn-jual" id="btn-jual-beranda" onclick="requireLogin(showJualModal)">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Jual
+      </button>
+    </div>
+  </nav>
+  <div class="beranda-layout">
+    <aside class="kategori-sidebar">
+      <div class="kategori-title">KATEGORI</div>
+      <button class="kat-item active" onclick="filterKategori(this,'Semua')">Semua</button>
+      <button class="kat-item" onclick="filterKategori(this,'Furniture')">Furniture</button>
+      <button class="kat-item" onclick="filterKategori(this,'Elektronik')">Elektronik</button>
+      <button class="kat-item" onclick="filterKategori(this,'Alat Masak')">Alat Masak</button>
+      <button class="kat-item" onclick="filterKategori(this,'Buku')">Buku</button>
+      <button class="kat-item" onclick="filterKategori(this,'Fashion')">Fashion</button>
+    </aside>
+    <div class="produk-grid" id="produk-grid"></div>
+  </div>
+</div>
+
+<!-- ===================== DETAIL ===================== -->
+<div id="page-detail" class="page">
+  <nav class="navbar">
+    <button class="icon-btn" onclick="showPage('page-beranda')" style="margin-right:4px"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="logo" onclick="showPage('page-beranda')">Ko<span>Swap</span></div>
+    <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Cari Kebutuhan Kosmu..."/></div>
+    <div class="nav-icons">
+      <button class="icon-btn" onclick="showPage('page-saved')"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="goToChat()"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="showPage('page-profil')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="btn-orange btn-jual" onclick="requireLogin(showJualModal)"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Jual</button>
+    </div>
+  </nav>
+  <div class="detail-wrap">
+    <div class="detail-img-col">
+      <img id="detail-img" src="" alt=""/>
+      <div class="detail-sold-overlay" id="detail-sold-overlay">🔴 SOLD OUT</div>
+    </div>
+    <div class="detail-info-col">
+      <span class="detail-kategori" id="detail-kategori"></span>
+      <h2 id="detail-nama"></h2>
+      <div class="detail-harga" id="detail-harga"></div>
+      <!-- sold out notice -->
+      <div class="sold-out-notice" id="detail-sold-notice" style="display:none">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Barang ini sudah terjual. Cari barang lain yang serupa!
+      </div>
+      <div class="detail-section-label">TENTANG BARANG</div>
+      <div class="detail-deskripsi" id="detail-deskripsi"></div>
+      <div class="detail-section-label" style="margin-top:4px">PENJUAL</div>
+      <div class="detail-penjual" id="detail-penjual-info"></div>
+      <!-- Aksi untuk penjual (toggle sold out) -->
+      <div id="detail-seller-actions" style="margin-bottom:20px;display:none">
+        <button class="btn-sold-toggle mark-sold" id="btn-toggle-sold" onclick="toggleSoldOut()">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <span id="toggle-sold-label">Tandai Sold Out</span>
+        </button>
+      </div>
+      <div class="detail-actions" id="detail-buyer-actions">
+        <button class="btn-outline-orange" onclick="tanyaPenjual()">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Tanya Penjual
+        </button>
+        <button class="btn-orange" onclick="showTawarModal()">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Tawar Harga
+        </button>
+      </div>
+      <!-- Tombol kasih rating (muncul setelah pernah beli) -->
+      <div id="detail-rating-btn-wrap" style="display:none">
+        <button class="btn-rating" onclick="showRatingModal()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Beri Rating Penjual
+        </button>
+      </div>
+      <!-- Login wall untuk guest -->
+      <div id="detail-login-wall" style="display:none">
+        <div class="login-wall-notice">
+          <p>🔒 Login dulu untuk bisa nawar atau chat penjual</p>
+          <div style="display:flex;gap:10px;justify-content:center">
+            <button class="btn-orange btn-sm" onclick="showPage('page-login')">Masuk</button>
+            <button class="btn-outline-orange btn-sm" onclick="showPage('page-daftar')">Daftar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CHAT ===================== -->
+<div id="page-chat" class="page">
+  <nav class="navbar">
+    <div class="logo" onclick="showPage('page-beranda')">Ko<span>Swap</span></div>
+    <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Cari Kebutuhan Kosmu..."/></div>
+    <div class="nav-icons">
+      <button class="icon-btn" onclick="showPage('page-saved')"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn active-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="showPage('page-profil')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="btn-orange btn-jual" onclick="requireLogin(showJualModal)"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Jual</button>
+    </div>
+  </nav>
+  <div class="chat-layout">
+    <div class="chat-sidebar">
+      <div class="chat-role-tabs">
+        <button class="chat-role-tab active" id="tab-buyer" onclick="switchChatRole('buyer')">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Sebagai Pembeli <span class="chat-role-badge" id="badge-buyer">2</span>
+        </button>
+        <button class="chat-role-tab" id="tab-seller" onclick="switchChatRole('seller')">
+          <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Sebagai Penjual <span class="chat-role-badge" id="badge-seller">1</span>
+        </button>
+      </div>
+      <div class="chat-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Cari percakapan..." id="chat-search-input" oninput="filterChatContacts(this.value)"/>
+      </div>
+      <div class="chat-list" id="chat-list"></div>
+    </div>
+    <div class="chat-main" id="chat-main">
+      <div class="no-chat-selected"><div class="big-icon">💬</div><p>Pilih percakapan untuk memulai</p><small>Kamu bisa chat sebagai pembeli maupun penjual dalam 1 akun</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PROFIL ===================== -->
+<div id="page-profil" class="page">
+  <nav class="navbar">
+    <div class="logo" onclick="showPage('page-beranda')">Ko<span>Swap</span></div>
+    <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Cari Kebutuhan Kosmu..."/></div>
+    <div class="nav-icons">
+      <button class="icon-btn" onclick="showPage('page-saved')"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="goToChat()"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn active-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="btn-orange btn-jual" onclick="requireLogin(showJualModal)"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Jual</button>
+    </div>
+  </nav>
+  <div class="profil-wrap">
+    <div class="profil-card" id="profil-card-content"></div>
+  </div>
+</div>
+
+
+<!-- ===================== TERSIMPAN ===================== -->
+<div id="page-saved" class="page">
+  <nav class="navbar">
+    <div class="logo" onclick="showPage('page-beranda')">Ko<span>Swap</span></div>
+    <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Cari Kebutuhan Kosmu..."/></div>
+    <div class="nav-icons">
+      <button class="icon-btn active-icon"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="goToChat()"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <button class="icon-btn" onclick="showPage('page-profil')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="btn-orange btn-jual" onclick="requireLogin(showJualModal)"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Jual</button>
+    </div>
+  </nav>
+  <div class="saved-wrap"><h2>🔖 Barang Tersimpan</h2><div class="produk-grid" id="saved-grid"></div></div>
+</div>
+
+<!-- ===================== MODAL: JUAL ===================== -->
+<div id="modal-jual" class="modal-overlay" onclick="closeModalOutside(event,'modal-jual')">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Jual Barang Baru</h3><button class="modal-close" onclick="closeModal('modal-jual')">✕</button></div>
+    <div class="modal-body">
+      <div class="upload-area" id="upload-area-jual" onclick="document.getElementById('file-input-jual').click()">
+        <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>KLIK UNTUK UPLOAD FOTO</span>
+        <small style="color:var(--text-light);font-size:0.8rem">JPG/PNG/WEBP, maks 5MB</small>
+        <input type="file" id="file-input-jual" accept="image/*" style="display:none" onchange="uploadFotoJual(event)"/>
+      </div>
+      <div class="upload-progress" id="upload-progress-jual">⏳ Mengupload foto...</div>
+      <div class="form-group"><label>NAMA BARANG</label><input type="text" placeholder="Nama barang..." id="jual-nama"/></div>
+      <div class="form-group">
+        <label>KATEGORI</label>
+        <select id="jual-kategori"><option value="">Pilih Kategori</option><option>Furniture</option><option>Elektronik</option><option>Alat Masak</option><option>Buku</option><option>Fashion</option></select>
+      </div>
+      <div class="form-group"><label>HARGA (Rp)</label><input type="number" placeholder="Contoh: 150000" id="jual-harga"/></div>
+      <div class="form-group"><label>DESKRIPSI</label><textarea placeholder="Kondisi barang, kelengkapan, dll..." id="jual-deskripsi" rows="3"></textarea></div>
+      <button class="btn-orange btn-full" onclick="postingBarang()">🚀 POSTING SEKARANG</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: TAWAR ===================== -->
+<div id="modal-tawar" class="modal-overlay" onclick="closeModalOutside(event,'modal-tawar')">
+  <div class="modal-box modal-sm">
+    <div class="modal-header"><h3>Tawar Harga</h3><button class="modal-close" onclick="closeModal('modal-tawar')">✕</button></div>
+    <div class="modal-body">
+      <div class="tawar-produk-preview">
+        <img id="tawar-img" src="" alt=""/>
+        <div class="tawar-preview-info">
+          <div class="tawar-nama" id="tawar-nama"></div>
+          <div class="tawar-harga-asli">Harga: <strong id="tawar-harga-asli"></strong></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>MASUKKAN HARGA TAWARAN (Rp)</label>
+        <input type="number" placeholder="Contoh: 80000" id="tawar-input"/>
+        <div class="harga-hint" id="tawar-hint"></div>
+      </div>
+      <button class="btn-orange btn-full" onclick="kirimTawar()">
+        <span style="display:flex;align-items:center;justify-content:center;gap:8px">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Kirim Penawaran
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: EDIT PROFIL ===================== -->
+<div id="modal-editprofil" class="modal-overlay" onclick="closeModalOutside(event,'modal-editprofil')">
+  <div class="modal-box modal-sm">
+    <div class="modal-header"><h3>Edit Profil</h3><button class="modal-close" onclick="closeModal('modal-editprofil')">✕</button></div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:20px">
+        <p style="font-size:0.8rem;font-weight:800;letter-spacing:1px;color:var(--text-mid);margin-bottom:10px">PILIH AVATAR</p>
+        <div class="avatar-selector" style="justify-content:center">
+          <img class="avatar-option" src="https://i.pinimg.com/736x/f3/04/f1/f304f13f1da62c3c732950bb5fafb20e.jpg" onclick="selectAvatar(this,'https://i.pinimg.com/736x/f3/04/f1/f304f13f1da62c3c732950bb5fafb20e.jpg')"/>
+          <img class="avatar-option" src="https://i.pinimg.com/736x/a2/bd/11/a2bd11eb861cca6cd72ead0982be7e25.jpg" onclick="selectAvatar(this,'https://i.pinimg.com/736x/a2/bd/11/a2bd11eb861cca6cd72ead0982be7e25.jpg')"/>
+          <img class="avatar-option" src="https://i.pinimg.com/736x/0c/a9/b2/0ca9b2417772fa95f2c86df2295486d6.jpg" onclick="selectAvatar(this,'https://i.pinimg.com/736x/0c/a9/b2/0ca9b2417772fa95f2c86df2295486d6.jpg')"/>
+          <img class="avatar-option" src="https://i.pinimg.com/736x/88/3b/80/883b807a44262e3aa749d1a7b48edc41.jpg" onclick="selectAvatar(this,'https://i.pinimg.com/736x/88/3b/80/883b807a44262e3aa749d1a7b48edc41.jpg')"/>
+          <img class="avatar-option" src="https://i.pinimg.com/736x/cc/6d/9f/cc6d9f2e2bb5ed2d9840bb745b4a7962.jpg" onclick="selectAvatar(this,'https://i.pinimg.com/736x/cc/6d/9f/cc6d9f2e2bb5ed2d9840bb745b4a7962.jpg')"/>
+        </div>
+        <!-- Upload foto avatar -->
+        <label class="upload-avatar-btn" style="display:inline-flex;margin-top:10px">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Upload Foto Sendiri
+          <input type="file" accept="image/*" style="display:none" onchange="uploadFotoAvatar(event)"/>
+        </label>
+        <div class="upload-progress" id="upload-progress-avatar">⏳ Mengupload foto...</div>
+      </div>
+      <div class="form-group"><label>NAMA</label><input type="text" id="edit-nama" placeholder="Nama kamu..."/></div>
+      <div class="form-group"><label>USERNAME</label><input type="text" id="edit-username" placeholder="@username..."/></div>
+      <div class="form-group"><label>BIO</label><textarea id="edit-bio" rows="2" placeholder="Cerita singkat tentang kamu..."></textarea></div>
+
+      <div class="form-group"><label>LOKASI</label><input type="text" id="edit-lokasi" placeholder="Contoh: Darussalam, Banda Aceh"/></div>
+      <button class="btn-orange btn-full" onclick="simpanProfil()">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: RATING SETELAH BELI ===================== -->
+<div id="modal-rating" class="modal-overlay" onclick="closeModalOutside(event,'modal-rating')">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h3>⭐ Rating Penjual</h3>
+      <button class="modal-close" onclick="closeModal('modal-rating')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Info barang yang dibeli -->
+      <div id="rating-produk-context" style="display:flex;align-items:center;gap:12px;background:var(--cream);border-radius:14px;padding:12px 14px;margin-bottom:16px;">
+        <img id="rating-produk-img" src="" style="width:52px;height:52px;border-radius:10px;object-fit:cover;border:2px solid var(--border);flex-shrink:0;"/>
+        <div style="flex:1;min-width:0;">
+          <div id="rating-produk-nama" style="font-weight:800;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+          <div id="rating-penjual-nama" style="font-size:0.8rem;color:var(--text-mid);margin-top:2px;"></div>
+          <div id="rating-harga-deal" style="font-size:0.82rem;font-weight:800;color:var(--orange);margin-top:2px;"></div>
+        </div>
+      </div>
+      <!-- Bintang -->
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:0.85rem;color:var(--text-mid);font-weight:700;margin-bottom:6px">Bagaimana pengalaman belanja kamu?</div>
+        <div class="rating-label" id="rating-label-text">Tap bintang untuk memberi nilai</div>
+        <div class="star-picker" id="star-picker">
+          <span class="star-pick" onclick="pickStar(1)" onmouseover="hoverStar(1)" onmouseout="unhoverStar()">⭐</span>
+          <span class="star-pick" onclick="pickStar(2)" onmouseover="hoverStar(2)" onmouseout="unhoverStar()">⭐</span>
+          <span class="star-pick" onclick="pickStar(3)" onmouseover="hoverStar(3)" onmouseout="unhoverStar()">⭐</span>
+          <span class="star-pick" onclick="pickStar(4)" onmouseover="hoverStar(4)" onmouseout="unhoverStar()">⭐</span>
+          <span class="star-pick" onclick="pickStar(5)" onmouseover="hoverStar(5)" onmouseout="unhoverStar()">⭐</span>
+        </div>
+      </div>
+      <div class="form-group"><label>KOMENTAR (opsional)</label><textarea id="rating-komentar" rows="3" placeholder="Ceritakan pengalamanmu beli barang ini..."></textarea></div>
+      <button class="btn-orange btn-full" onclick="kirimRating()">⭐ Kirim Rating</button>
+      <button class="btn-outline-orange btn-full" style="margin-top:8px" onclick="closeModal('modal-rating')">Lewati</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: PERINGATAN HARGA RENDAH ===================== -->
+<div id="modal-harga-warning" class="modal-overlay" onclick="closeModalOutside(event,'modal-harga-warning')">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h3>⚠️ Peringatan Harga</h3>
+      <button class="modal-close" onclick="closeModal('modal-harga-warning')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#fff3cd;border:2px solid #f5c842;border-radius:16px;padding:18px 20px;margin-bottom:18px;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:8px;">🚨</div>
+        <div style="font-weight:900;font-size:1.05rem;color:#7d4e00;margin-bottom:6px;">Tawaran Di Bawah Harga Wajar!</div>
+        <div id="harga-warning-detail" style="font-size:0.88rem;color:#856404;line-height:1.6;"></div>
+      </div>
+      <div style="font-size:0.88rem;color:var(--text-mid);line-height:1.6;margin-bottom:18px;text-align:center;">
+        Kamu tetap bisa <strong>terima</strong> atau <strong>tolak</strong> penawaran ini. Keputusan ada di tanganmu.
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-orange" style="flex:1;padding:12px;border-radius:14px;font-weight:800;" onclick="konfirmasiTerimaNegoWarned()">
+          ✓ Tetap Terima
+        </button>
+        <button class="btn-outline-orange" style="flex:1;padding:12px;border-radius:14px;font-weight:800;" onclick="tolakNegoWarned()">
+          ✕ Tolak
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script>
+// =============================================
+// DATA PRODUK
+// =============================================
+// Data dummy lengkap — langsung tampil, akan di-replace jika API berhasil
+let produkData = [
+  { id:1,  nama:'Lemari Baju 2 Pintu',           harga:250000,  kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80',  deskripsi:'Lemari kayu 2 pintu kondisi bagus, sedikit lecet di sudut bawah. Tinggi 170cm.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:2,  nama:'Laptop Asus Vivobook 14"',       harga:2800000, kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80',  deskripsi:'Laptop second pakai 1 tahun, kondisi mulus. RAM 8GB, SSD 256GB, baterai masih tahan 5 jam.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:3,  nama:'Rice Cooker Miyako 1L',          harga:85000,   kategori:'Alat Masak', soldOut:false, img:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80',  deskripsi:'Rice cooker masih normal, cuma tempat cuci beras hilang. Cocok buat masak sendiri.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:4,  nama:'Buku Kalkulus Purcell Ed. 9',    harga:60000,   kategori:'Buku',       soldOut:false, img:'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',  deskripsi:'Buku kalkulus lengkap, ada coret-coretan pensil sedikit. Kondisi layak.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:5,  nama:'Jaket Hoodie Polos Abu',         harga:95000,   kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80',  deskripsi:'Hoodie abu-abu size L, bahan tebal. Sudah dicuci bersih. Kondisi 80%.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:6,  nama:'Meja Belajar Lipat',             harga:120000,  kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&q=80',  deskripsi:'Meja belajar lipat portable, mudah disimpan. Cocok untuk kamar kos kecil.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:7,  nama:'Kipas Angin Meja USB',           harga:45000,   kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&q=80',  deskripsi:'Kipas USB mini buat di meja, 3 kecepatan, masih normal.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:8,  nama:'Wajan Anti Lengket 24cm',        harga:55000,   kategori:'Alat Masak', soldOut:false, img:'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?w=400&q=80',  deskripsi:'Wajan teflon 24cm, lapisan masih bagus, sudah 6 bulan pakai.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:9,  nama:'Celana Jeans Slim 32',           harga:70000,   kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80',  deskripsi:'Jeans biru slim fit size 32, kondisi 85%. Tidak ada robek. Beli tapi jarang pakai.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:10, nama:'Buku Fisika Dasar Sears',        harga:75000,   kategori:'Buku',       soldOut:false, img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=80',  deskripsi:'Buku fisika dasar jilid 1&2, kondisi oke. Ada highlight kuning di beberapa bagian.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:11, nama:'Kursi Gaming Second',            harga:380000,  kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&q=80',  deskripsi:'Kursi gaming merek Rexus, sandarannya bisa rebah sampai 160°. Ada sedikit goresan di armrest.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:12, nama:'Earphone JBL Tune 110',          harga:110000,  kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',  deskripsi:'Earphone JBL kabel, suara masih jernih. Karet telinga kanan agak longgar tapi masih nyaman.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:13, nama:'Kompor Listrik 1 Tungku',        harga:130000,  kategori:'Alat Masak', soldOut:false, img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80',  deskripsi:'Kompor listrik 1 tungku Maxim, kondisi normal. Cocok untuk kos yang tidak boleh pakai gas.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:14, nama:'Sepatu Sneakers Nike 42',        harga:200000,  kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',  deskripsi:'Nike Air Max replika premium size 42. Sudah dicuci, kondisi 75%.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:15, nama:'Rak Buku 5 Susun',              harga:175000,  kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1568667256549-094345857637?w=400&q=80',  deskripsi:'Rak buku kayu 5 susun, bisa menampung 50+ buku. Kondisi kokoh, cat sedikit mengelupas.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:16, nama:'Power Bank Xiaomi 10000mAh',     harga:150000,  kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&q=80',  deskripsi:'Power bank Xiaomi 10000mAh, kapasitas masih 90%. Charger bawaan masih ada.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:17, nama:'Kemeja Flanel Kotak-kotak',      harga:55000,   kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',  deskripsi:'Kemeja flanel merah kotak-kotak, size M. Kondisi 90%, sudah dicuci rapi.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:18, nama:'Blender Philips HR2071',         harga:165000,  kategori:'Alat Masak', soldOut:false, img:'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400&q=80',  deskripsi:'Blender Philips 350W, masih normal. Toples kaca tanpa retak. Pisau masih tajam.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:19, nama:'Setrika Philips GC1010',        harga:90000,   kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',  deskripsi:'Setrika kering Philips, panas merata, kondisi normal. Kabel masih bagus.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:20, nama:'Kasur Lipat Single 160x200',    harga:320000,  kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80',  deskripsi:'Kasur lipat busa tebal, ukuran single. Cover dicuci bersih. Cocok kos minimalis.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:21, nama:'Buku Kimia Organik Fessenden',  harga:80000,   kategori:'Buku',       soldOut:false, img:'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&q=80',  deskripsi:'Buku kimia organik edisi 2, ada coret-coret di bab pertama. Selain itu mulus.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:22, nama:'Topi Bucket Polos Hitam',       harga:35000,   kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&q=80',  deskripsi:'Bucket hat polos hitam, bahan katun. Kondisi 85%, masih layak pakai.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:23, nama:'Dispenser Cosmos CWD-1300',     harga:140000,  kategori:'Alat Masak', soldOut:false, img:'https://images.unsplash.com/photo-1624969862644-791f3dc98927?w=400&q=80',  deskripsi:'Dispenser hot & cold, kondisi normal. Ada sedikit bekas mineral di galon tapi fungsional.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:24, nama:'Mouse Logitech M100',           harga:65000,   kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&q=80',  deskripsi:'Mouse kabel Logitech, scroll masih lancar, klik responsif. Kondisi 90%.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:25, nama:'Bantal Guling Set',             harga:50000,   kategori:'Furniture',  soldOut:false, img:'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&q=80',  deskripsi:'1 bantal + 1 guling, sudah dicuci bersih. Dacron masih empuk, cover motif polos.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:26, nama:'Sepatu Sandal Pria 42',         harga:40000,   kategori:'Fashion',    soldOut:false, img:'https://images.unsplash.com/photo-1603487742131-4160ec999306?w=400&q=80',  deskripsi:'Sandal jepit pria size 42, merk Ando. Kondisi 70%, masih layak sehari-hari.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:27, nama:'Keyboard Wireless Rapoo',       harga:185000,  kategori:'Elektronik', soldOut:false, img:'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80',  deskripsi:'Keyboard wireless Rapoo E9100M, baterai tahan 1 bulan. Tombol semua berfungsi normal.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:28, nama:'Buku Akuntansi Biaya Mulyadi',  harga:70000,   kategori:'Buku',       soldOut:false, img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80',  deskripsi:'Buku akuntansi biaya edisi terbaru. Ada stabilo di beberapa bab, isi lengkap.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:29, nama:'Galon Tupperware 12L',          harga:40000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&q=80', deskripsi:'Galon plastik Tupperware 12L, kondisi bagus, sudah dicuci bersih. Tanpa kran.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:30, nama:'Teko Listrik Miyako 1.8L',      harga:75000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80', deskripsi:'Teko listrik Miyako kapasitas 1.8L. Elemen masih normal, cepat mendidih.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:31, nama:'Celana Training Polos XL',      harga:30000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&q=80', deskripsi:'Celana training hitam polos size XL, bahan jersey adem. Kondisi 80%.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:32, nama:'Lampu Belajar LED Philips',     harga:55000,  kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80', deskripsi:'Lampu belajar LED Philips dengan leher fleksibel. Cahaya putih terang, hemat daya.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:33, nama:'Rak Sepatu 3 Tingkat',          harga:65000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=400&q=80', deskripsi:'Rak sepatu lipat 3 tingkat bahan stainless, kuat dan ringkas. Kondisi oke.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:34, nama:'Kaos Polos Putih L (3pcs)',     harga:45000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80', deskripsi:'Paket 3 kaos polos putih size L, sudah dicuci bersih. Kondisi 85%.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:35, nama:'Buku Manajemen Keuangan',       harga:65000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80', deskripsi:'Buku manajemen keuangan Brigham edisi 14. Ada catatan pensil di bab awal.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:36, nama:'Charger Laptop Universal 65W',  harga:120000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80', deskripsi:'Adaptor universal 65W multi-tip, kompatibel banyak laptop. Kondisi 90%.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:37, nama:'Piring Set Keramik 6pcs',       harga:50000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80', deskripsi:'Set 6 piring keramik putih polos, kondisi mulus, tidak ada retak atau gompal.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:38, nama:'Karpet Lantai 150x200cm',       harga:95000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80', deskripsi:'Karpet bulu halus ukuran 150x200cm warna abu. Sudah dicuci dan bersih.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:39, nama:'Headset Gaming Rexus HX20',     harga:135000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&q=80', deskripsi:'Headset gaming dengan mic, surround 7.1 virtual. Kondisi normal, suara jernih.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:40, nama:'Baju Gamis Wanita M',           harga:60000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1594938298603-c8148c4b984b?w=400&q=80', deskripsi:'Gamis warna navy size M, bahan katun adem. Hanya dipakai 3x, masih rapi.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:41, nama:'Kabel HDMI 2m Rexus',           harga:25000,  kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1601524909162-ae8725290836?w=400&q=80', deskripsi:'Kabel HDMI 2 meter support 4K, kondisi normal, tidak ada kerusakan kabel.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:42, nama:'Buku Statistik Dasar Sudjana',  harga:55000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&q=80', deskripsi:'Buku statistika dasar edisi revisi, ada coret sedikit. Isi masih sangat jelas.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:43, nama:'Termos Nasi Lion Star 2L',      harga:70000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80', deskripsi:'Termos nasi stainless 2 liter, bisa dipakai juga untuk aron. Kondisi bagus.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:44, nama:'Jam Dinding Minimalis',         harga:35000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=400&q=80', deskripsi:'Jam dinding diameter 30cm, desain minimalis putih polos. Baterai AA termasuk.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:45, nama:'Webcam Logitech C270',          harga:200000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=400&q=80', deskripsi:'Webcam Logitech C270 720p HD, plug and play. Kondisi mulus, cocok zoom kuliah.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:46, nama:'Dompet Kulit Pria Slim',        harga:45000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1627123424574-724758594785?w=400&q=80', deskripsi:'Dompet kulit slim minimalis warna coklat, 8 slot kartu. Kondisi 85%.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:47, nama:'Buku Atlas Dunia Lengkap',      harga:50000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=80', deskripsi:'Atlas dunia terbaru, cover keras. Ada sedikit lipatan di pojok, isi masih bersih.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:48, nama:'Minyak Goreng Bimoli 2L',      harga:32000,  kategori:'Alat Masak',  soldOut:true,  img:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80', deskripsi:'Minyak goreng Bimoli 2L, sudah terjual. Cari barang serupa dari penjual lain ya!', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:49, nama:'Speaker Bluetooth JBL Go 2',   harga:175000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80', deskripsi:'JBL Go 2 biru, suara kencang dan jernih. Baterai masih tahan 4 jam. Kondisi 85%.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:50, nama:'Cermin Meja Lipat',             harga:28000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80', deskripsi:'Cermin meja lipat kecil, cocok untuk kos putri. Berdiri mandiri, tanpa kerusakan.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:51, nama:'Sepatu Slip On Canvas 40',      harga:55000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80', deskripsi:'Slip on hitam polos size 40, kondisi 80%. Ringan dan nyaman untuk kampus.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:52, nama:'Tablet Samsung A7 Lite',        harga:1200000,kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1589739900266-43b2843f4c12?w=400&q=80', deskripsi:'Tablet Samsung Tab A7 Lite, layar 8.7 inch, RAM 3GB. Kondisi mulus, baterai normal.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:53, nama:'Kamus Bahasa Inggris Oxford',    harga:40000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80', deskripsi:'Kamus Oxford tebal edisi terbaru. Kondisi oke, cover sedikit kusam tapi isi bersih.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:54, nama:'Celana Pendek Olahraga M',       harga:22000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80', deskripsi:'Celana pendek sport warna navy size M, bahan dryfit. Kondisi 80%, masih nyaman.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:55, nama:'Extension Kabel 5 Lubang 5m',   harga:48000,  kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80', deskripsi:'Stop kontak 5 lubang kabel 5 meter merk Panasonic. Kondisi normal, aman dipakai.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:56, nama:'Kursi Lipat Besi Murah',         harga:55000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80', deskripsi:'Kursi lipat besi standar, kuat menahan 100kg. Ringan dan mudah disimpan. Kondisi 85%.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:57, nama:'Tas Ransel Laptop 15.6"',        harga:85000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80', deskripsi:'Tas ransel hitam muat laptop 15.6 inch, banyak kantong. Kondisi 85%, jahitan masih kuat.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:58, nama:'Buku Pemrograman Python',        harga:72000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80', deskripsi:'Buku belajar Python dari nol, cocok pemula. Kondisi bersih, tidak ada coret-coret.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:59, nama:'Mangkok Mie Besar Set 4pcs',     harga:32000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80', deskripsi:'Mangkok besar putih keramik set 4 buah. Cocok untuk mie, soto, atau bakso kos.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:60, nama:'Cermin Dinding 40x60cm',         harga:60000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80', deskripsi:'Cermin persegi panjang 40x60cm dengan bingkai kayu tipis. Kondisi mulus tanpa retak.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:61, nama:'Flash Drive SanDisk 32GB',       harga:38000,  kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80', deskripsi:'Flashdisk SanDisk Cruzer Blade 32GB. Masih berfungsi normal. Kondisi fisik mulus.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:62, nama:'Baju Batik Pria Size L',         harga:55000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1594938298603-c8148c4b984b?w=400&q=80', deskripsi:'Kemeja batik motif parang warna coklat size L. Kondisi 90%, hanya dipakai 2x.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:63, nama:'Buku Hukum Perdata Subekti',     harga:60000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1607473129014-0afb7ed09c3a?w=400&q=80', deskripsi:'Buku hukum perdata karangan Subekti. Kondisi layak, ada stabilo kuning di bab 1-3.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:64, nama:'Printer Epson L120 Second',      harga:450000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400&q=80', deskripsi:'Printer Epson L120 second, masih normal. Tinta penuh, sudah tes print normal.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:65, nama:'Matras Yoga 6mm Tebal',          harga:70000,  kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=400&q=80', deskripsi:'Matras yoga NBR 6mm, warna ungu. Tidak licin, sudah dicuci bersih. Kondisi 80%.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:66, nama:'Jaket Parasut Pria XL',          harga:80000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&q=80', deskripsi:'Jaket parasut tipis warna hitam size XL, anti angin. Kondisi 85%, ritsleting masih mulus.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:67, nama:'Kotak Makan 3 Sekat',            harga:28000,  kategori:'Alat Masak',  soldOut:false, img:'https://images.unsplash.com/photo-1605349727985-a8b24f76a4ab?w=400&q=80', deskripsi:'Lunch box 3 sekat bahan food grade. Kondisi bagus, sudah dicuci. Warna biru.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:68, nama:'Monitor LED 19" LG Second',      harga:550000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80', deskripsi:'Monitor LG 19 inch LED, resolusi 1366x768. Kondisi normal, kabel VGA termasuk.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:69, nama:'Novel Laskar Pelangi',            harga:30000,  kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80', deskripsi:'Novel Laskar Pelangi karya Andrea Hirata. Kondisi bersih, tidak ada robek atau coretan.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+  { id:70, nama:'Kulkas Mini 1 Pintu 60L',        harga:750000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80', deskripsi:'Kulkas mini 1 pintu 60 liter merk Panasonic. Dingin normal, tidak ada kebocoran freon.', penjual:{id:1,nama:'Rina Safira',username:'@rinasafira',avatar:'https://i.pravatar.cc/100?img=47',rating:4.8,ulasan:14} },
+  { id:71, nama:'Loker Plastik 3 Susun',          harga:110000, kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=400&q=80', deskripsi:'Lemari loker plastik 3 susun, muat banyak baju. Kondisi 90%, hanya sedikit bekas goresan.', penjual:{id:2,nama:'Budi Santoso',username:'@budisantoso',avatar:'https://i.pravatar.cc/100?img=12',rating:4.9,ulasan:23} },
+  { id:72, nama:'Dress Wanita Motif Bunga M',     harga:45000,  kategori:'Fashion',     soldOut:false, img:'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=80', deskripsi:'Dress motif bunga warna pink size M, bahan katun dingin. Kondisi 85%, layak dipakai.', penjual:{id:3,nama:'Ayu Lestari',username:'@ayulestari',avatar:'https://i.pravatar.cc/100?img=25',rating:4.6,ulasan:8} },
+  { id:73, nama:'SSD Eksternal 240GB Kingston',   harga:320000, kategori:'Elektronik',  soldOut:false, img:'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80', deskripsi:'SSD eksternal Kingston 240GB, kecepatan baca tulis cepat. Kondisi 90%, masih normal.', penjual:{id:5,nama:'Siti Rahayu',username:'@sitirahayu',avatar:'https://i.pravatar.cc/100?img=32',rating:4.7,ulasan:11} },
+  { id:74, nama:'Buku Biologi Campbell Ed.9',     harga:150000, kategori:'Buku',        soldOut:false, img:'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&q=80', deskripsi:'Buku biologi Campbell edisi 9 terjemahan. Lengkap, ada highlight di bab sel dan genetika.', penjual:{id:4,nama:'Dika Ramadhan',username:'@dikaramdhan',avatar:'https://i.pravatar.cc/100?img=15',rating:4.5,ulasan:6} },
+  { id:75, nama:'Meja Rias Kecil Lipat',          harga:145000, kategori:'Furniture',   soldOut:false, img:'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80', deskripsi:'Meja rias lipat dengan cermin, ringan dan praktis. Warna putih, kondisi 80%.', penjual:{id:6,nama:'Fajar Nugroho',username:'@fajarnugroho',avatar:'https://i.pravatar.cc/100?img=8',rating:4.4,ulasan:5} },
+];
+
+
+// =============================================
+// STATE
+// =============================================
+let savedItems      = new Set();
+let currentProduk   = null;
+let currentKategori = 'Semua';
+let searchQuery     = '';
+let selectedChatId  = null;
+let currentAvatar   = '';
+let uploadedFotoUrl = ''; // URL foto yang sudah diupload untuk posting
+let currentUser     = null; // null = belum login
+
+let profilData = { nama:'', username:'', bio:'', lokasi:'', avatar:'' };
+
+// =============================================
+// HELPER: Login check
+// =============================================
+function isLoggedIn() { return currentUser !== null; }
+
+function requireLogin(fn) {
+  if (!isLoggedIn()) {
+    showToast('⚠️ Login dulu untuk menggunakan fitur ini');
+    showPage('page-login');
+    return;
+  }
+  fn();
+}
+
+// Jelajahi barang: siapa saja bisa lihat, tapi nawar/chat butuh login
+function jelajahiBarang() {
+  showPage('page-beranda');
+}
+
+function goToChat() {
+  if (!isLoggedIn()) {
+    showToast('⚠️ Login dulu untuk mengakses chat');
+    showPage('page-login');
+    return;
+  }
+  showPage('page-chat');
+}
+
+// =============================================
+// PAGE NAVIGATION
+// =============================================
+function updateNavAvatars() {
+  const avatarSrc = isLoggedIn() ? (profilData.avatar || 'https://i.pravatar.cc/100') : null;
+  const btn = document.getElementById('nav-profil-beranda');
+  if (btn) {
+    if (avatarSrc) {
+      btn.classList.add('nav-avatar-btn');
+      btn.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="profil"/>`;
+    } else {
+      btn.classList.remove('nav-avatar-btn');
+      btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    }
+  }
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById(pageId);
+  if (page) { page.classList.add('active'); window.scrollTo(0,0); }
+  if (pageId === 'page-beranda') { renderProdukGrid(); loadProdukDariDB(); }
+  if (pageId === 'page-profil')  renderProfil();
+  if (pageId === 'page-chat')    { if (!isLoggedIn()) { showPage('page-login'); showToast('⚠️ Login dulu'); return; } renderChat(); }
+  if (pageId === 'page-saved')   renderSaved();
+  updateNavAvatars();
+}
+
+// =============================================
+// =============================================
+// LOAD PRODUK DARI DATABASE
+// =============================================
+async function loadProdukDariDB() {
+  // Langsung render dummy data dulu supaya grid tidak kosong
+  renderProdukGrid();
+
+  try {
+    const res  = await fetch('api/get_produk.php');
+    const data = await res.json();
+    if (data.success && data.data && data.data.length > 0) {
+      produkData = data.data;
+      renderProdukGrid();
+    }
+    // Kalau API kosong/gagal → tetap pakai dummy data
+  } catch (err) {
+    // Tetap pakai produkData dummy yang sudah ada di atas
+  }
+}
+
+// Tambah fungsi ini setelah deklarasi produkData
+async function ensureProdukData() {
+  if (produkData.length > 0) return;
+  try {
+    const res = await fetch('api/get_produk.php');
+    const d = await res.json();
+    if (d.success) produkData = d.data;
+  } catch(e) {}
+}
+
+// =============================================
+function formatHarga(n) { return 'Rp ' + parseInt(n).toLocaleString('id-ID'); }
+
+// =============================================
+// RATING HELPERS
+// =============================================
+function renderStars(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i) html += `<span class="star filled">★</span>`;
+    else if (rating >= i - 0.5) html += `<span class="star half">★</span>`;
+    else html += `<span class="star">★</span>`;
+  }
+  return html;
+}
+
+let pickedStar = 0;
+const starLabels = ['','Mengecewakan 😞','Kurang memuaskan 😐','Cukup oke 🙂','Bagus! 😊','Luar biasa! 🤩'];
+
+function pickStar(n) {
+  pickedStar = n;
+  document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('lit', i < n));
+  document.getElementById('rating-label-text').textContent = starLabels[n];
+}
+function hoverStar(n) {
+  document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('lit', i < n));
+}
+function unhoverStar() {
+  document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('lit', i < pickedStar));
+}
+
+// ratingContext = { produkNama, produkImg, penjualNama, penjualId, hargaDeal, produkId }
+let ratingContext = null;
+
+function showRatingModal(ctx) {
+  pickedStar = 0;
+  ratingContext = ctx || null;
+  document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('lit'));
+  document.getElementById('rating-label-text').textContent = 'Tap bintang untuk memberi nilai';
+  document.getElementById('rating-komentar').value = '';
+
+  // Isi konteks barang
+  const ctxEl = document.getElementById('rating-produk-context');
+  if (ctx && ctxEl) {
+    document.getElementById('rating-produk-img').src   = ctx.produkImg  || '';
+    document.getElementById('rating-produk-nama').textContent  = ctx.produkNama || 'Barang';
+    document.getElementById('rating-penjual-nama').textContent = '👤 ' + (ctx.penjualNama || 'Penjual');
+    document.getElementById('rating-harga-deal').textContent   = ctx.hargaDeal ? 'Deal: ' + formatHarga(ctx.hargaDeal) : '';
+    ctxEl.style.display = 'flex';
+  } else if (ctxEl) {
+    ctxEl.style.display = 'none';
+  }
+
+  document.getElementById('modal-rating').classList.add('open');
+}
+
+function kirimRating() {
+  if (!pickedStar) { showToast('⚠️ Pilih bintang dulu ya!'); return; }
+  const komentar = document.getElementById('rating-komentar').value.trim();
+  closeModal('modal-rating');
+
+  // Update lokal sementara (untuk tampilan detail)
+  const ctx = ratingContext;
+  if (ctx && ctx.produkId) {
+    const p = produkData.find(x => x.id === ctx.produkId);
+    if (p && p.penjual) {
+      const oldRating = p.penjual.rating || 4.8;
+      const oldCount  = p.penjual.ulasan || 5;
+      const newCount  = oldCount + 1;
+      p.penjual.rating = parseFloat(((oldRating * oldCount + pickedStar) / newCount).toFixed(1));
+      p.penjual.ulasan = newCount;
+    }
+  } else if (currentProduk) {
+    const p = currentProduk;
+    const oldRating = p.penjual.rating || 4.8;
+    const oldCount  = p.penjual.ulasan || 12;
+    const newCount  = oldCount + 1;
+    p.penjual.rating = parseFloat(((oldRating * oldCount + pickedStar) / newCount).toFixed(1));
+    p.penjual.ulasan = newCount;
+    showDetail(p.id);
+  }
+
+  const label = ['','😞','😐','🙂','😊','🤩'][pickedStar];
+  showToast(`⭐ Rating ${pickedStar} bintang terkirim! ${label} Makasih ya 🙏`);
+  ratingContext = null;
+
+  // Sync ke backend
+  const penjualId = ctx?.penjualId || currentProduk?.penjual?.id;
+  const pemberiId = currentUser?.id;
+  if (penjualId && pemberiId) {
+    fetch('api/rating.php', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ penjual_id: penjualId, pemberi_id: pemberiId, rating: pickedStar, komentar })
+    }).catch(() => {});
+  }
+}
+
+
+// =============================================
+// RENDER PRODUCT GRID
+// =============================================
+function renderProdukGrid() {
+  const grid = document.getElementById('produk-grid');
+  if (!grid) return;
+  let filtered = currentKategori === 'Semua' ? produkData : produkData.filter(p => p.kategori === currentKategori);
+  if (searchQuery) filtered = filtered.filter(p => p.nama.toLowerCase().includes(searchQuery.toLowerCase()) || p.kategori.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Hilangkan sold out dari beranda (masih bisa muncul di profil penjual/tersimpan)
+  filtered = filtered.filter(p => !p.soldOut);
+  if (filtered.length === 0) { grid.innerHTML = `<div class="empty-state"><div class="big-icon">🔍</div><p>Tidak ada barang ditemukan</p></div>`; return; }
+  grid.innerHTML = filtered.map(p => produkCard(p)).join('');
+}
+
+function renderStarsSmall(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i) html += `<span class="star filled">★</span>`;
+    else if (rating >= i - 0.5) html += `<span class="star half">★</span>`;
+    else html += `<span class="star empty">★</span>`;
+  }
+  return html;
+}
+
+function produkCard(p) {
+  const isSaved = savedItems.has(p.id);
+  const rating  = p.penjual ? (p.penjual.rating || 0) : 0;
+  const ulasan  = p.penjual ? (p.penjual.ulasan || 0) : 0;
+  const ratingHtml = rating > 0
+    ? `<div class="produk-card-rating"><span class="pc-stars">${renderStarsSmall(rating)}</span><span class="pc-rating-num">${rating.toFixed(1)}</span><span class="pc-terjual">(${ulasan})</span></div>`
+    : '';
+  return `
+    <div class="produk-card ${p.soldOut ? 'sold-out' : ''}" onclick="showDetail(${p.id})">
+      ${p.soldOut ? '<div class="sold-out-badge">SOLD OUT</div>' : ''}
+      <img class="produk-card-img" src="${p.img}" alt="${p.nama}" loading="lazy"/>
+      <div class="produk-card-body">
+        <div class="produk-card-info">
+          <h4>${p.nama}</h4>
+          <div class="produk-card-harga">${formatHarga(p.harga)}</div>
+          ${ratingHtml}
+        </div>
+        <button class="btn-save ${isSaved ? 'saved' : ''}" onclick="event.stopPropagation(); toggleSave(${p.id}, this)">
+          <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="${isSaved ? 'currentColor' : 'none'}"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+// =============================================
+// SEARCH & FILTER
+// =============================================
+function handleSearch(val) { searchQuery = val; renderProdukGrid(); }
+function filterKategori(btn, kat) {
+  document.querySelectorAll('.kat-item').forEach(k => k.classList.remove('active'));
+  btn.classList.add('active'); currentKategori = kat; renderProdukGrid();
+}
+
+// =============================================
+// SAVE / UNSAVE
+// =============================================
+function toggleSave(id, btn) {
+  if (!isLoggedIn()) { showToast('⚠️ Login dulu untuk menyimpan barang'); showPage('page-login'); return; }
+  if (savedItems.has(id)) {
+    savedItems.delete(id); btn.classList.remove('saved');
+    btn.querySelector('path').setAttribute('fill','none'); showToast('Dihapus dari tersimpan');
+  } else {
+    savedItems.add(id); btn.classList.add('saved');
+    btn.querySelector('path').setAttribute('fill','currentColor'); showToast('Disimpan ✓');
+  }
+}
+
+// =============================================
+// DETAIL PRODUK
+// =============================================
+function showDetail(id) {
+  const p = produkData.find(x => x.id === id);
+  if (!p) return;
+  currentProduk = p;
+  document.getElementById('detail-img').src = p.img;
+  document.getElementById('detail-kategori').textContent = p.kategori;
+  document.getElementById('detail-nama').textContent = p.nama;
+
+  // Harga (coret jika sold out)
+  const hargaEl = document.getElementById('detail-harga');
+  hargaEl.textContent = formatHarga(p.harga);
+  hargaEl.style.textDecoration = p.soldOut ? 'line-through' : 'none';
+  hargaEl.style.color = p.soldOut ? 'var(--text-light)' : 'var(--orange)';
+
+  document.getElementById('detail-deskripsi').textContent = p.deskripsi;
+  const pjRating = p.penjual.rating || 4.8;
+  const pjUlasan = p.penjual.ulasan || 12;
+  const pjStars  = renderStars(pjRating);
+  document.getElementById('detail-penjual-info').innerHTML = `
+    <img src="${p.penjual.avatar}" alt="${p.penjual.nama}"/>
+    <div style="flex:1">
+      <div class="pjl-name">${p.penjual.nama}</div>
+      <div class="pjl-sub">${p.penjual.username}</div>
+      <div class="seller-rating-row">
+        <div class="stars-display">${pjStars}</div>
+        <span class="rating-score">${pjRating.toFixed(1)}</span>
+        <span class="rating-count">(${pjUlasan} ulasan)</span>
+      </div>
+    </div>`;
+
+  // Sold out overlay & notice
+  const overlay = document.getElementById('detail-sold-overlay');
+  const notice  = document.getElementById('detail-sold-notice');
+  overlay.style.display = p.soldOut ? 'block' : 'none';
+  notice.style.display  = p.soldOut ? 'flex' : 'none';
+
+  // Cek apakah produk milik user yg login
+  const isMyProduct = isLoggedIn() && (p.penjual.username === profilData.username);
+  const sellerActions = document.getElementById('detail-seller-actions');
+  const buyerActions  = document.getElementById('detail-buyer-actions');
+  const loginWall     = document.getElementById('detail-login-wall');
+
+  if (isMyProduct) {
+    // Penjual: tampilkan toggle sold out, sembunyikan aksi beli
+    sellerActions.style.display = 'block';
+    buyerActions.style.display  = 'none';
+    loginWall.style.display     = 'none';
+    const toggleBtn   = document.getElementById('btn-toggle-sold');
+    const toggleLabel = document.getElementById('toggle-sold-label');
+    if (p.soldOut) {
+      toggleBtn.className  = 'btn-sold-toggle mark-avail';
+      toggleLabel.textContent = '✓ Aktifkan Kembali';
+    } else {
+      toggleBtn.className  = 'btn-sold-toggle mark-sold';
+      toggleLabel.textContent = '🔒 Tandai Sold Out';
+    }
+  } else if (!isLoggedIn()) {
+    // Guest: bisa lihat tapi tidak bisa nawar/chat
+    sellerActions.style.display = 'none';
+    buyerActions.style.display  = 'none';
+    loginWall.style.display     = 'block';
+  } else {
+    // Pembeli yang sudah login
+    sellerActions.style.display = 'none';
+    loginWall.style.display     = 'none';
+    // Sembunyikan aksi jika sold out
+    buyerActions.style.display = p.soldOut ? 'none' : 'flex';
+    // Tampilkan tombol rating jika barang sudah sold out (artinya sudah ada transaksi)
+    const ratingWrap = document.getElementById('detail-rating-btn-wrap');
+    if (ratingWrap) ratingWrap.style.display = p.soldOut ? 'block' : 'none';
+  }
+
+  showPage('page-detail');
+}
+
+async function toggleSoldOut() {
+  if (!currentProduk || !isLoggedIn()) return;
+  currentProduk.soldOut = !currentProduk.soldOut;
+  showToast(currentProduk.soldOut ? '🔒 Ditandai SOLD OUT' : '✅ Barang aktif kembali');
+  showDetail(currentProduk.id);
+
+  // Sync ke backend
+  try {
+    await fetch('api/toggle_sold.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ produk_id: currentProduk.id, user_id: currentUser.id })
+    });
+  } catch {}
+}
+
+async function tanyaPenjual() {
+  if (!isLoggedIn()) { showPage('page-login'); showToast('⚠️ Login dulu'); return; }
+  if (!currentProduk) return;
+  if (currentProduk.soldOut) { showToast('⚠️ Barang ini sudah sold out'); return; }
+
+  const sellerId = currentProduk.penjual.id;
+  if (sellerId === currentUser.id) { showToast('⚠️ Ini barang kamu sendiri'); return; }
+
+  try {
+    const res  = await fetch('api/chat.php?action=create', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ buyer_id: currentUser.id, seller_id: sellerId, produk_id: currentProduk.id })
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadChatList();
+      currentChatRole = 'buyer';
+      // Cari key chat yang baru
+      const key = Object.keys(chatData).find(k => chatData[k].chat_id === data.chat_id && chatData[k].role === 'buyer');
+      showPage('page-chat');
+      if (key) setTimeout(() => openChat(key), 300);
+    }
+  } catch {
+    showToast('⚠️ Tidak bisa membuka chat, coba lagi');
+  }
+}
+
+// =============================================
+// PROFIL
+// =============================================
+function renderProfil() {
+  const card = document.getElementById('profil-card-content');
+  if (!card) return;
+
+  // Jika belum login: tampilkan guest view
+  if (!isLoggedIn()) {
+    card.innerHTML = `
+      <div class="profil-guest">
+        <div class="big-icon">👤</div>
+        <h2>Belum Login</h2>
+        <p>Login atau buat akun dulu untuk melihat profil, upload barang, dan chat dengan penjual.</p>
+        <div class="btn-group">
+          <button class="btn-orange" onclick="showPage('page-login')">Masuk</button>
+          <button class="btn-outline-orange" onclick="showPage('page-daftar')">Daftar Akun</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Profil user yang sudah login
+  const myItems = produkData.filter(p => p.penjual.username === profilData.username);
+  // Hitung rata-rata rating dari produk user ini (ambil dari data penjual)
+  const myRating = profilData.rating || 4.8;
+  const myUlasan = profilData.ulasan || 12;
+  const myTerjual = profilData.terjual || 12;
+  card.innerHTML = `
+    <div class="profil-header">
+      <div class="profil-avatar-wrap">
+        <img class="profil-avatar" src="${profilData.avatar || 'https://i.pravatar.cc/100'}" alt="avatar"/>
+        <div class="profil-avatar-edit" onclick="openEditProfil()"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      </div>
+      <div class="profil-info">
+        <h2>${profilData.nama || 'Pengguna KoSwap'}</h2>
+        <p class="profil-username">${profilData.username || ''}</p>
+        ${profilData.bio ? `<p class="profil-bio">"${profilData.bio}"</p>` : ''}
+        <div class="profil-meta">
+          ${profilData.lokasi ? `<span>📍 ${profilData.lokasi}</span>` : ''}
+        </div>
+      </div>
+      <div class="profil-btns">
+        <button class="btn-outline-orange btn-sm" onclick="openEditProfil()">✏️ Edit Profil</button>
+        <button class="btn-sm" style="border:2px solid #e53935;color:#e53935;font-weight:700;border-radius:50px;background:transparent;padding:7px 16px" onclick="doLogout()">🚪 Keluar</button>
+      </div>
+    </div>
+    <div class="profil-stats">
+      <div class="stat-box">
+        <span class="stat-icon-box">⭐</span>
+        <span class="stat-val">${myRating}</span>
+        <div class="stars-display" style="justify-content:center">${renderStars(parseFloat(myRating))}</div>
+        <span class="stat-lbl">RATING</span>
+        <span style="font-size:0.7rem;color:var(--text-light)">${myUlasan} ulasan</span>
+      </div>
+      <div class="stat-box"><span class="stat-icon-box">🛍️</span><span class="stat-val">${myTerjual}</span><span class="stat-lbl">TERJUAL</span></div>
+      <div class="stat-box"><span class="stat-icon-box">📢</span><span class="stat-val">${myItems.length}</span><span class="stat-lbl">IKLAN</span></div>
+      <div class="stat-box"><span class="stat-icon-box">🔗</span><span class="stat-val">2026</span><span class="stat-lbl">BERGABUNG</span></div>
+    </div>
+    <div class="profil-iklan-header">
+      <span class="iklan-badge"><span>📢</span> IKLAN SAYA</span>
+      <button class="btn-outline-orange btn-sm" onclick="requireLogin(showJualModal)">+ Tambah Iklan</button>
+    </div>
+    <div class="profil-produk-grid">
+      ${myItems.length === 0
+        ? `<div class="empty-state"><div class="big-icon" style="font-size:2.5rem">⚠️</div><p>Belum ada iklan!</p></div>`
+        : myItems.map(p => `
+          <div class="produk-card ${p.soldOut ? 'sold-out' : ''}" onclick="showDetail(${p.id})" style="position:relative">
+            ${p.soldOut ? '<div class="sold-out-badge">SOLD OUT</div>' : ''}
+            <img class="produk-card-img" src="${p.img}" alt="${p.nama}" loading="lazy"/>
+            <div class="produk-card-body">
+              <div class="produk-card-info">
+                <h4>${p.nama}</h4>
+                <div class="produk-card-harga">${formatHarga(p.harga)}</div>
+              </div>
+            </div>
+          </div>`).join('')
+      }
+    </div>`;
+}
+
+function openEditProfil() {
+  // Pakai nama dari currentUser (nama waktu login/daftar), bukan nama yang mungkin sudah diubah-ubah
+  document.getElementById('edit-nama').value     = currentUser?.nama     || profilData.nama     || '';
+  document.getElementById('edit-username').value = profilData.username || '';
+  document.getElementById('edit-bio').value      = profilData.bio      || '';
+  document.getElementById('edit-lokasi').value   = profilData.lokasi   || '';
+  // Set avatar yang dipilih
+  if (profilData.avatar) {
+    currentAvatar = profilData.avatar;
+    document.querySelectorAll('.avatar-option').forEach(a => {
+      a.classList.toggle('selected', a.src === profilData.avatar);
+    });
+  }
+  document.getElementById('modal-editprofil').classList.add('open');
+}
+
+// =============================================
+// SAVED PAGE
+// =============================================
+function renderSaved() {
+  const grid = document.getElementById('saved-grid');
+  if (!grid) return;
+  if (savedItems.size === 0) { grid.innerHTML = `<div class="empty-state"><div class="big-icon">🔖</div><p>Belum ada barang tersimpan</p></div>`; return; }
+  grid.innerHTML = produkData.filter(p => savedItems.has(p.id)).map(p => produkCard(p)).join('');
+}
+
+// =============================================
+// CHAT (Dual Role)
+// =============================================
+let currentChatRole = 'buyer';
+
+// chatData sekarang diisi dari database
+let chatData = {};
+let chatPollingInterval = null;
+
+// ── Load daftar chat dari DB ──────────────────────────────────
+async function loadChatList() {
+  if (!isLoggedIn()) return;
+  try {
+    const res  = await fetch(`api/chat.php?action=get_list&user_id=${currentUser.id}`);
+    const data = await res.json();
+    if (!data.success) return;
+
+    // Konversi format DB ke format chatData lokal
+    chatData = {};
+    data.data.forEach(c => {
+      const key = `${c.role}_${c.chat_id}`;
+      chatData[key] = {
+        chat_id:      c.chat_id,
+        role:         c.role,
+        unread:       c.unread,
+        contact:      c.contact,
+        produkContext:c.produk,
+        last_message: c.last_message,
+        messages:     [], // dimuat saat buka chat
+      };
+    });
+    updateChatBadges();
+    renderChatList();
+  } catch {}
+}
+
+// ── Load pesan untuk chat tertentu ───────────────────────────
+async function loadMessages(chatId) {
+  try {
+    const res  = await fetch(`api/chat.php?action=get_messages&chat_id=${chatId}&user_id=${currentUser.id}`);
+    const data = await res.json();
+    if (data.success) {
+      const key = Object.keys(chatData).find(k => chatData[k].chat_id === chatId);
+      if (key) {
+        chatData[key].messages = data.data;
+        chatData[key].unread   = 0;
+        await ensureProdukData();
+        renderMessages();
+        updateChatBadges();
+      }
+    }
+  } catch {}
+}
+
+// ── Polling pesan baru setiap 3 detik ────────────────────────
+function startChatPolling(chatId) {
+  stopChatPolling();
+  chatPollingInterval = setInterval(() => loadMessages(chatId), 3000);
+}
+function stopChatPolling() {
+  if (chatPollingInterval) clearInterval(chatPollingInterval);
+  chatPollingInterval = null;
+}
+
+
+
+function switchChatRole(role) {
+  currentChatRole = role; selectedChatId = null; stopChatPolling();
+  document.getElementById('tab-buyer').classList.toggle('active', role === 'buyer');
+  document.getElementById('tab-seller').classList.toggle('active', role === 'seller');
+  document.getElementById('chat-main').innerHTML = `
+    <div class="no-chat-selected">
+      <div class="big-icon">${role === 'buyer' ? '🛍️' : '🏪'}</div>
+      <p>${role === 'buyer' ? 'Chat dengan penjual' : 'Chat dari calon pembeli'}</p>
+      <small>${role === 'buyer' ? 'Tanya atau nego barang yang kamu incar' : 'Terima & respon penawaran dari calon pembeli'}</small>
+    </div>`;
+  renderChatList();
+}
+
+function renderChat() {
+  // Kalau chatData sudah ada (demo mode), langsung render — jangan overwrite
+  if (Object.keys(chatData).length > 0) {
+    updateChatBadges();
+    renderChatList();
+  } else {
+    loadChatList();
+  }
+}
+
+function updateChatBadges() {
+  const bb = document.getElementById('badge-buyer');
+  const bs = document.getElementById('badge-seller');
+  const buyerUnread  = Object.values(chatData).filter(c => c.role === 'buyer'  && c.unread > 0).length;
+  const sellerUnread = Object.values(chatData).filter(c => c.role === 'seller' && c.unread > 0).length;
+  if (bb) { bb.textContent = buyerUnread;  bb.style.display = buyerUnread  > 0 ? '' : 'none'; }
+  if (bs) { bs.textContent = sellerUnread; bs.style.display = sellerUnread > 0 ? '' : 'none'; }
+}
+
+function renderChatList(filter = '') {
+  const list = document.getElementById('chat-list');
+  if (!list) return;
+  const contacts = Object.values(chatData).filter(c =>
+    c.role === currentChatRole &&
+    c.contact.nama.toLowerCase().includes(filter.toLowerCase())
+  );
+  if (contacts.length === 0) {
+    list.innerHTML = `<div class="chat-list-empty"><div class="chat-empty-icon">${currentChatRole === 'buyer' ? '🛍️' : '🏪'}</div><p>${currentChatRole === 'buyer' ? 'Belum ada chat dengan penjual.<br>Cari barang & tanya penjualnya!' : 'Belum ada chat masuk.<br>Posting barang dulu untuk mulai berjualan!'}</p></div>`;
+    return;
+  }
+  list.innerHTML = contacts.map(c => {
+    const key = Object.keys(chatData).find(k => chatData[k].chat_id === c.chat_id && chatData[k].role === c.role);
+    const isActive = selectedChatId === key;
+    const hasUnread = c.unread > 0 && !isActive;
+    const pillClass = c.role === 'buyer' ? 'pill-buyer' : 'pill-seller';
+    return `<div class="chat-contact ${isActive ? 'active' : ''} ${hasUnread ? 'unread' : ''}" onclick="openChat('${key}')">
+      <img src="${c.contact.avatar || 'https://i.pravatar.cc/100'}" alt="${c.contact.nama}"/>
+      <div class="chat-contact-info">
+        <div class="chat-contact-name">${c.contact.nama}</div>
+        <div class="chat-contact-last">${c.produkContext ? '📦 '+c.produkContext.nama+' · ' : ''}${c.last_message || '...'}</div>
+        <span class="chat-role-pill ${pillClass}">${c.role === 'buyer' ? '🛍️ Pembeli' : '🏪 Penjual'}</span>
+      </div>
+      <div class="chat-contact-right">
+        <span class="chat-contact-time">Hari Ini</span>
+        ${hasUnread ? `<span class="chat-unread-badge">${c.unread}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterChatContacts(val) { renderChatList(val); }
+
+function openChat(key) {
+  selectedChatId = key;
+  const c = chatData[key];
+  if (!c) return;
+  c.unread = 0;
+  updateChatBadges();
+  renderChatList();
+
+  const isSellerRole = c.role === 'seller';
+  const roleColor = isSellerRole ? '#2e7d32' : '#1565c0';
+  const roleBg    = isSellerRole ? '#e8f5e9' : '#e3f2fd';
+  const roleLabel = isSellerRole ? '🏪 Mode Penjual' : '🛍️ Mode Pembeli';
+  const produkCtx = c.produkContext;
+  const main = document.getElementById('chat-main');
+  main.innerHTML = `
+    <div class="chat-header">
+      <img src="${c.contact.avatar || 'https://i.pravatar.cc/100'}" alt="${c.contact.nama}"/>
+      <div class="chat-header-info"><span>${c.contact.nama}</span><small>${c.contact.username || ''}</small></div>
+      <span class="chat-header-role" style="background:${roleBg};color:${roleColor}">${roleLabel}</span>
+    </div>
+    ${produkCtx ? `<div class="chat-produk-bar" onclick="showDetail(${produkCtx.id})">
+      <img src="${produkCtx.img}" alt="${produkCtx.nama}"/>
+      <div class="chat-produk-bar-info">
+        <div class="chat-produk-bar-label">KONTEKS BARANG</div>
+        <div class="chat-produk-bar-nama">${produkCtx.nama}</div>
+        <div class="chat-produk-bar-harga">${formatHarga(produkCtx.harga)}</div>
+      </div>
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--text-light)"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>` : ''}
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-bar">
+      <div class="chat-input-wrap">
+        <svg viewBox="0 0 24 24" onclick="showToast('Stiker segera hadir!')"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        <input type="text" placeholder="${isSellerRole ? 'Balas pesan pembeli...' : 'Tanya atau tawar harga...'}" id="chat-input-text" onkeydown="if(event.key==='Enter')sendChat()"/>
+      </div>
+      ${!isSellerRole && produkCtx ? `<button class="btn-outline-orange btn-sm" onclick="showTawarModal()" title="Tawar harga" style="border-radius:50%;padding:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>` : ''}
+      <button class="btn-orange btn-send" onclick="sendChat()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>`;
+
+  // Load messages dari DB lalu mulai polling
+  loadMessages(c.chat_id);
+  startChatPolling(c.chat_id);
+}
+
+function renderMessages() {
+  const area = document.getElementById('chat-messages');
+  if (!area || !selectedChatId) return;
+  const c = chatData[selectedChatId];
+  if (!c) return;
+
+  area.innerHTML = `<div class="chat-day-divider">Hari Ini</div>` +
+    c.messages.map((m, idx) => {
+
+      // ── NEGO CARD ────────────────────────────────────────────
+      if (m.type === 'nego') {
+        const produkId   = m.produkId || m.produk_id_ref || 0;
+        const tawarHarga = m.tawarHarga || m.tawar_harga  || 0;
+        const negoStatus = m.nego_status || m.status || 'pending';
+        const p = produkData.find(x => x.id === produkId);
+        const isOutgoing = m.from === 'outgoing';
+        const isSeller   = c.role === 'seller';
+
+        // Cek apakah harga tawaran di bawah 70% harga asli → warning ke penjual
+        const hargaAsli   = p ? p.harga : (c.produkContext ? c.produkContext.harga : 0);
+        const persenTawar = hargaAsli ? Math.round((tawarHarga / hargaAsli) * 100) : 100;
+        const isTerlalu   = persenTawar < 70 && hargaAsli > 0;
+
+        let statusHtml  = '';
+        let actionsHtml = '';
+        let warnHtml    = '';
+
+        if (negoStatus === 'accepted') {
+          statusHtml = `<div class="nego-status-bar accepted">✓ Penawaran Diterima</div>`;
+        } else if (negoStatus === 'rejected') {
+          statusHtml = `<div class="nego-status-bar rejected">✕ Penawaran Ditolak</div>`;
+        } else {
+          // pending — seller bisa terima/tolak (incoming ke seller)
+          const canRespond = isSeller && !isOutgoing;
+          if (canRespond) {
+            // Jika harga di bawah 70%: tombol Terima buka warning modal dulu
+            const terimaAction = isTerlalu
+              ? `showNegoWarning('${selectedChatId}',${idx},${tawarHarga},${hargaAsli},${persenTawar})`
+              : `respondNego('${selectedChatId}',${idx},'accepted')`;
+
+            if (isTerlalu) {
+              warnHtml = `<div class="nego-warning">⚠️ Tawaran ini hanya ${persenTawar}% dari harga asli (Rp ${hargaAsli.toLocaleString('id-ID')}) — di bawah batas wajar 70%. Pastikan kamu yakin sebelum menerima.</div>`;
+            }
+            actionsHtml = `<div class="nego-actions">
+              <button class="btn-nego-terima" onclick="${terimaAction}">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Terima${isTerlalu ? ' ⚠️' : ''}
+              </button>
+              <button class="btn-nego-tolak" onclick="respondNego('${selectedChatId}',${idx},'rejected')">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Tolak
+              </button>
+            </div>`;
+          } else {
+            statusHtml = `<div class="nego-status-bar pending">⏳ Menunggu Respons Penjual</div>`;
+          }
+        }
+
+        // Fallback jika produk tidak ketemu di produkData
+        const imgSrc = p ? p.img : (c.produkContext ? c.produkContext.img : 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=120&q=60');
+        const pNama  = p ? p.nama : (c.produkContext ? c.produkContext.nama : 'Barang');
+        const hargaFallback = p ? p.harga : (c.produkContext ? c.produkContext.harga : 0);
+        const hargaDisplay = hargaFallback || tawarHarga;
+        return `<div class="msg-nego-card ${isOutgoing ? 'outgoing-nego' : ''}">
+          <div class="nego-header-label">🏷️ Penawaran Harga</div>
+          <div class="nego-inner">
+            <img class="nego-img" src="${imgSrc}" alt="${pNama}" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?w=120&q=60'"/>
+            <div class="nego-details">
+              <div class="nego-name">${pNama}</div>
+              ${hargaDisplay && hargaDisplay !== tawarHarga ? `<div class="nego-harga-coret">${formatHarga(hargaDisplay)}</div>` : ''}
+              <div class="nego-harga-label">Tawaran kamu:</div>
+              <div class="nego-harga-deal">${formatHarga(tawarHarga)}</div>
+            </div>
+          </div>
+          ${warnHtml}${statusHtml}${actionsHtml}
+        </div>`;
+      }
+
+      // ── DEAL CARD ────────────────────────────────────────────
+      if (m.type === 'deal') {
+        const produkId   = m.produkId || m.produk_id_ref || 0;
+        const tawarHarga = m.tawarHarga || m.tawar_harga  || 0;
+        const dealStatus = m.deal_status || m.dealStatus   || 'waiting_cod';
+        const p = produkData.find(x => x.id === produkId) || c.produkContext;
+        const isOutgoing = m.from === 'outgoing';
+        const isSeller   = c.role === 'seller';
+
+        // Logika footer deal card:
+        // waiting_cod  → penjual (role=seller) tampilkan tombol "Konfirmasi COD Selesai"
+        //                pembeli (role=buyer) lihat "Menunggu penjual konfirmasi COD..."
+        // seller_confirmed → pembeli (role=buyer) tampilkan tombol "Terima Barang"
+        //                    penjual lihat "Menunggu pembeli konfirmasi terima barang"
+        // done → semua lihat "✅ Transaksi Selesai!"
+        let footerHtml = '';
+        if (dealStatus === 'waiting_cod') {
+          footerHtml = isSeller
+            ? `<button class="btn-konfirmasi-deal" onclick="konfirmasiDeal('${selectedChatId}',${idx})">🤝 Konfirmasi COD Selesai</button>`
+            : `<div class="deal-card-footer-warn">⏳ Menunggu penjual konfirmasi setelah COD bertemu...</div>`;
+        } else if (dealStatus === 'seller_confirmed') {
+          footerHtml = !isSeller
+            ? `<button class="btn-terima-barang" onclick="konfirmasiTerimaBarang('${selectedChatId}',${idx})">📦 Konfirmasi Sudah Terima Barang</button>`
+            : `<div class="deal-card-footer">✅ COD dikonfirmasi — menunggu pembeli terima barang</div>`;
+        } else {
+          footerHtml = `<div class="deal-done-bar">✅ Transaksi Selesai!</div>`;
+        }
+
+        const imgSrc = (p && p.img) ? p.img : 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=120&q=60';
+        const pNama  = (p && p.nama) ? p.nama : 'Barang';
+        return `<div class="deal-card ${isOutgoing ? 'outgoing-deal' : ''}">
+          <div class="deal-card-header">🤝 DEAL COD</div>
+          <div class="deal-card-inner">
+            <img src="${imgSrc}" alt="${pNama}" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?w=120&q=60'"/>
+            <div class="deal-card-info">
+              <div class="deal-nama">${pNama}</div>
+              <div class="deal-harga">${formatHarga(tawarHarga)}</div>
+            </div>
+          </div>
+          ${footerHtml}
+        </div>`;
+      }
+
+      // ── TEXT BUBBLE ──────────────────────────────────────────
+      const isOut = m.from === 'outgoing';
+      const isRead = m.is_read;
+      // Centang: ✓ terkirim, ✓✓ dibaca (biru)
+      const tickHtml = isOut
+        ? `<span class="read-tick ${isRead ? 'read' : 'sent'}">${isRead ? '✓✓' : '✓'}</span>`
+        : '';
+      const msgText = (m.text || m.content || '').toString().trim();
+      if (!msgText) return ''; // skip pesan kosong
+      return `<div class="msg-bubble ${m.from}">
+        <span class="bubble-text">${msgText}</span>
+        <div class="msg-time ${isOut ? 'outgoing-time' : 'incoming-time'}">${m.time || ''} ${tickHtml}</div>
+      </div>`;
+
+    }).join('');
+  area.scrollTop = area.scrollHeight;
+}
+
+// ── State untuk warning nego harga rendah ────────────────────
+let _warnedNegoState = null;
+
+function showNegoWarning(chatKey, msgIdx, tawarHarga, hargaAsli, persenTawar) {
+  _warnedNegoState = { chatKey, msgIdx };
+  const selisih = hargaAsli - tawarHarga;
+  document.getElementById('harga-warning-detail').innerHTML =
+    `Harga asli: <strong>Rp ${hargaAsli.toLocaleString('id-ID')}</strong><br>` +
+    `Tawaran: <strong>Rp ${tawarHarga.toLocaleString('id-ID')}</strong><br>` +
+    `Selisih: <strong style="color:#c0392b">-Rp ${selisih.toLocaleString('id-ID')}</strong> (hanya ${persenTawar}% dari harga asli)`;
+  document.getElementById('modal-harga-warning').classList.add('open');
+}
+
+async function konfirmasiTerimaNegoWarned() {
+  closeModal('modal-harga-warning');
+  if (!_warnedNegoState) return;
+  const { chatKey, msgIdx } = _warnedNegoState;
+  _warnedNegoState = null;
+  await respondNego(chatKey, msgIdx, 'accepted');
+}
+
+async function tolakNegoWarned() {
+  closeModal('modal-harga-warning');
+  if (!_warnedNegoState) return;
+  const { chatKey, msgIdx } = _warnedNegoState;
+  _warnedNegoState = null;
+  await respondNego(chatKey, msgIdx, 'rejected');
+}
+
+// ── Seller: terima atau tolak nego ───────────────────────────
+async function respondNego(chatKey, msgIdx, status) {
+  const c = chatData[chatKey];
+  if (!c) return;
+  const m = c.messages[msgIdx];
+  if (!m) return;
+
+  m.nego_status = status;
+  m.status      = status;
+
+  const tawarHarga = m.tawarHarga || m.tawar_harga || 0;
+  const produkId   = m.produkId   || m.produk_id_ref || 0;
+
+  if (status === 'accepted') {
+    // Update nego_status di DB
+    if (m.id) {
+      await fetch('api/chat.php?action=update_nego', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message_id: m.id, status: 'accepted' })
+      }).catch(() => {});
+    }
+    // Kirim pesan teks konfirmasi
+    const replyText = `Halo kak! Penawaran saya terima 🎉 Silakan siapkan untuk COD ya 😊`;
+    await fetch('api/chat.php?action=send', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'text', content: replyText })
+    }).catch(() => {});
+    // Kirim deal card ke DB
+    await fetch('api/chat.php?action=send', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'deal',
+        tawar_harga: tawarHarga, produk_id_ref: produkId, deal_status: 'waiting_cod' })
+    }).catch(() => {});
+    showToast('✓ Penawaran diterima! Konfirmasi setelah COD.');
+  } else {
+    if (m.id) {
+      await fetch('api/chat.php?action=update_nego', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ message_id: m.id, status: 'rejected' })
+      }).catch(() => {});
+    }
+    const replyText = `Maaf kak, penawaran belum bisa saya terima. Coba tawar lagi ya 🙏`;
+    await fetch('api/chat.php?action=send', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'text', content: replyText })
+    }).catch(() => {});
+    showToast('Penawaran ditolak.');
+  }
+  // Reload messages dari DB
+  await loadMessages(c.chat_id);
+}
+
+// ── Seller: konfirmasi deal setelah COD ──────────────────────
+async function konfirmasiDeal(chatKey, msgIdx) {
+  const c = chatData[chatKey];
+  if (!c) return;
+  const m = c.messages[msgIdx];
+  if (!m) return;
+
+  // Ambil harga & produk dengan fallback bertingkat
+  let tawarHarga = parseInt(m.tawarHarga || m.tawar_harga || 0);
+  let produkId   = parseInt(m.produkId   || m.produk_id_ref || 0);
+
+  // Fallback ke produkContext di chat jika nilai masih 0
+  if (!produkId   && c.produkContext) produkId   = c.produkContext.id   || 0;
+  if (!tawarHarga && c.produkContext) tawarHarga = c.produkContext.harga || 0;
+
+  // Fallback terakhir: cari pesan nego accepted sebelumnya
+  if (!tawarHarga) {
+    const negoMsg = c.messages.slice().reverse().find(x => x.type === 'nego' && x.nego_status === 'accepted');
+    if (negoMsg) tawarHarga = parseInt(negoMsg.tawarHarga || negoMsg.tawar_harga || 0);
+    if (negoMsg && !produkId) produkId = parseInt(negoMsg.produkId || negoMsg.produk_id_ref || 0);
+  }
+
+  // Update deal_status di DB
+  if (m.id) {
+    await fetch('api/chat.php?action=update_deal', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message_id: m.id, deal_status: 'seller_confirmed' })
+    }).catch(() => {});
+  }
+
+  // Kirim pesan konfirmasi
+  await fetch('api/chat.php?action=send', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'text',
+      content: '✅ Deal dikonfirmasi! Barang sudah berpindah tangan. Terima kasih 🎉' })
+  }).catch(() => {});
+
+  // Catat ke tabel penjualan
+  await fetch('api/catat_deal.php', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ produk_id: produkId, seller_id: currentUser.id,
+      buyer_id: c.contact.id || 0, harga_deal: tawarHarga })
+  }).catch(() => {});
+
+  // Sold out lokal
+  const produk = produkData.find(p => p.id === produkId);
+  if (produk) produk.soldOut = true;
+
+  showToast('🎉 Deal dikonfirmasi! Barang otomatis sold out.');
+  await loadMessages(c.chat_id);
+  renderProdukGrid();
+}
+
+// ── Buyer: konfirmasi sudah terima barang ────────────────────
+async function konfirmasiTerimaBarang(chatKey, msgIdx) {
+  const c = chatData[chatKey];
+  if (!c) return;
+  const m = c.messages[msgIdx];
+  if (!m) return;
+
+  if (m.id) {
+    await fetch('api/chat.php?action=update_deal', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message_id: m.id, deal_status: 'buyer_confirmed' })
+    }).catch(() => {});
+  }
+
+  await fetch('api/chat.php?action=send', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'text',
+      content: '📦 Saya sudah terima barangnya! Transaksi selesai. Terima kasih 🙏' })
+  }).catch(() => {});
+
+  showToast('📦 Transaksi selesai!');
+  await loadMessages(c.chat_id);
+
+  // Tawarin rating ke buyer setelah konfirmasi terima barang
+  const produkCtx = c.produkContext;
+  setTimeout(() => {
+    const ctx = produkCtx ? {
+      produkNama : produkCtx.nama  || 'Barang',
+      produkImg  : produkCtx.img   || '',
+      penjualNama: c.contact?.nama || 'Penjual',
+      penjualId  : c.contact?.id   || 0,
+      hargaDeal  : m.tawarHarga || m.tawar_harga || produkCtx.harga || 0,
+      produkId   : produkCtx.id || 0,
+    } : null;
+    showRatingModal(ctx);
+  }, 800);
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input-text');
+  if (!input || !selectedChatId) return;
+  const text = input.value.trim();
+  if (!text) return;
+  const c = chatData[selectedChatId];
+  if (!c) return;
+  input.value = '';
+
+  // Tambah ke tampilan lokal dulu (optimistic UI)
+  c.messages.push({ type:'text', from:'outgoing', text, time:'Baru' });
+  renderMessages();
+
+  try {
+    await fetch('api/chat.php?action=send', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: c.chat_id, sender_id: currentUser.id, type:'text', content: text })
+    });
+  } catch {}
+}
+
+// =============================================
+// UPLOAD FOTO (ke PHP backend)
+// =============================================
+async function uploadFotoJual(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const progress = document.getElementById('upload-progress-jual');
+  progress.style.display = 'block';
+
+  // Preview langsung + simpan base64 sebagai fallback
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result;
+    // Simpan base64 dulu sebagai fallback sementara server diproses
+    uploadedFotoUrl = base64;
+
+    const area = document.getElementById('upload-area-jual');
+    area.innerHTML = `<img src="${base64}" style="max-height:140px;border-radius:12px;object-fit:cover;"/><span style="font-size:0.8rem;margin-top:6px;display:block">Klik untuk ganti foto</span><input type="file" id="file-input-jual" accept="image/*" style="display:none" onchange="uploadFotoJual(event)"/>`;
+
+    // Upload ke server jika tersedia
+    try {
+      const formData = new FormData();
+      formData.append('foto', file);
+      const res  = await fetch('api/upload_foto.php', { method:'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        uploadedFotoUrl = data.url; // Ganti ke URL server kalau berhasil
+        showToast('✓ Foto berhasil diupload');
+      } else {
+        // Tetap pakai base64, foto masih kelihatan
+        showToast('⚠️ Foto tersimpan lokal (server tidak tersedia)');
+      }
+    } catch (err) {
+      // Tetap pakai base64 preview — foto masih muncul di produk
+    }
+    progress.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadFotoAvatar(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const progress = document.getElementById('upload-progress-avatar');
+  progress.style.display = 'block';
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result;
+    currentAvatar = base64; // Langsung set base64 sebagai avatar sementara
+
+    // Tampilkan preview avatar di modal
+    document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+
+    try {
+      const formData = new FormData();
+      formData.append('foto', file);
+      const res  = await fetch('api/upload_foto.php', { method:'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        currentAvatar = data.url; // Ganti ke URL server
+        showToast('✓ Foto avatar berhasil diupload');
+      } else {
+        showToast('✓ Foto tersimpan (mode lokal)');
+      }
+    } catch {
+      showToast('✓ Foto tersimpan (mode lokal)');
+    }
+    progress.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// =============================================
+// MODAL: JUAL
+// =============================================
+function showJualModal() {
+  uploadedFotoUrl = '';
+  document.getElementById('modal-jual').classList.add('open');
+}
+
+function showTawarModal() {
+  if (!isLoggedIn()) { showToast('⚠️ Login dulu'); showPage('page-login'); return; }
+  if (!currentProduk || currentProduk.soldOut) { showToast('⚠️ Barang sudah sold out'); return; }
+  document.getElementById('modal-tawar').classList.add('open');
+  document.getElementById('tawar-img').src = currentProduk.img;
+  document.getElementById('tawar-nama').textContent = currentProduk.nama;
+  document.getElementById('tawar-harga-asli').textContent = formatHarga(currentProduk.harga);
+  document.getElementById('tawar-hint').textContent = `Tips: Tawarkan 70–85% dari harga asli (${formatHarga(currentProduk.harga * 0.75)})`;
+  document.getElementById('tawar-input').value = '';
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalOutside(event, id) { if (event.target === document.getElementById(id)) closeModal(id); }
+
+async function postingBarang() {
+  if (!isLoggedIn()) { showToast('⚠️ Login dulu'); return; }
+  const nama      = document.getElementById('jual-nama').value.trim();
+  const harga     = document.getElementById('jual-harga').value;
+  const kategori  = document.getElementById('jual-kategori').value;
+  const deskripsi = document.getElementById('jual-deskripsi').value.trim();
+  if (!nama || !harga || !kategori) { showToast('⚠️ Lengkapi semua data dulu ya!'); return; }
+
+  // Tutup modal & beri feedback dulu
+  closeModal('modal-jual');
+  showToast('⏳ Memposting barang...');
+
+  const payload = {
+    user_id:   currentUser.id,
+    nama, harga: parseInt(harga), kategori, deskripsi,
+    img: uploadedFotoUrl || '',
+  };
+
+  try {
+    const res  = await fetch('api/posting_barang.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Tambah ke array lokal langsung (tanpa reload penuh)
+      produkData.unshift(data.produk);
+      showToast('🎉 Barang berhasil diposting!');
+    } else {
+      showToast('⚠️ Gagal posting: ' + data.message);
+    }
+  } catch (err) {
+    // Fallback lokal kalau backend belum jalan
+    const newProduk = {
+      id: Date.now(),
+      nama, harga: parseInt(harga), kategori, soldOut: false,
+      img: uploadedFotoUrl || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
+      deskripsi,
+      penjual: { id: currentUser.id, nama: profilData.nama, username: profilData.username, avatar: profilData.avatar }
+    };
+    produkData.unshift(newProduk);
+    showToast('🎉 Barang berhasil diposting! (mode lokal)');
+  }
+
+  // Reset form
+  document.getElementById('jual-nama').value      = '';
+  document.getElementById('jual-harga').value     = '';
+  document.getElementById('jual-kategori').value  = '';
+  document.getElementById('jual-deskripsi').value = '';
+  uploadedFotoUrl = '';
+
+  renderProdukGrid();
+  renderProfil();
+}
+
+async function kirimTawar() {
+  if (!isLoggedIn()) { showPage('page-login'); return; }
+  const harga = document.getElementById('tawar-input').value;
+  if (!harga) { showToast('⚠️ Masukkan harga tawaran'); return; }
+  const tawarHarga = parseInt(harga);
+  if (!currentProduk) return;
+
+  closeModal('modal-tawar');
+  const sellerId = currentProduk.penjual.id;
+
+  try {
+    // Buat/ambil chat
+    const res  = await fetch('api/chat.php?action=create', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ buyer_id: currentUser.id, seller_id: sellerId, produk_id: currentProduk.id })
+    });
+    const data = await res.json();
+    if (!data.success) { showToast('⚠️ Gagal membuat chat'); return; }
+
+    // Kirim pesan nego
+    await fetch('api/chat.php?action=send', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        chat_id: data.chat_id, sender_id: currentUser.id,
+        type: 'nego', tawar_harga: tawarHarga,
+        produk_id_ref: currentProduk.id, nego_status: 'pending'
+      })
+    });
+
+    showToast(`💬 Penawaran ${formatHarga(tawarHarga)} dikirim!`);
+    await loadChatList();
+    currentChatRole = 'buyer';
+    const key = Object.keys(chatData).find(k => chatData[k].chat_id === data.chat_id && chatData[k].role === 'buyer');
+    showPage('page-chat');
+    if (key) setTimeout(() => openChat(key), 300);
+  } catch {
+    showToast('⚠️ Gagal mengirim tawaran');
+  }
+}
+
+// =============================================
+// PROFIL EDIT
+// =============================================
+function selectAvatar(img, src) {
+  document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+  img.classList.add('selected'); currentAvatar = src;
+}
+
+function simpanProfil() {
+  const nama     = document.getElementById('edit-nama').value.trim();
+  const username = document.getElementById('edit-username').value.trim();
+  const bio      = document.getElementById('edit-bio').value.trim();
+  const lokasi   = document.getElementById('edit-lokasi').value.trim();
+
+  if (!nama) { showToast('⚠️ Nama tidak boleh kosong'); return; }
+
+  profilData.nama     = nama;
+  profilData.username = username;
+  profilData.bio      = bio;
+  profilData.lokasi   = lokasi;
+  if (currentAvatar) profilData.avatar = currentAvatar;
+
+  // Sync ke currentUser
+  if (currentUser) {
+    currentUser.nama     = nama;
+    currentUser.username = username;
+    currentUser.bio      = bio;
+    currentUser.lokasi   = lokasi;
+    if (currentAvatar) currentUser.avatar = currentAvatar;
+  }
+
+  closeModal('modal-editprofil');
+  showToast('✓ Profil berhasil diperbarui!');
+  updateNavAvatars();
+  renderProfil();
+
+  // Sync ke backend jika ada
+  if (currentUser?.id) {
+    fetch('api/update_profil.php', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ user_id:currentUser.id, nama, username, bio, lokasi, avatar:profilData.avatar })
+    }).catch(() => {});
+  }
+}
+
+// =============================================
+// LOGIN / DAFTAR / LOGOUT
+// =============================================
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value.trim();
+  if (!email || !pass) { showToast('⚠️ Isi email dan kata sandi'); return; }
+  try {
+    const res  = await fetch('api/login.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password: pass }) });
+    const data = await res.json();
+    if (data.success) {
+      // Kalau admin, jangan masuk ke user side — arahkan ke admin panel
+      if (data.user.is_admin) {
+        showToast('👮 Akun admin! Mengarahkan ke panel admin...');
+        setTimeout(() => { window.location.href = 'admin_login.php'; }, 1200);
+        return;
+      }
+      currentUser         = data.user;
+      profilData.nama     = data.user.nama;
+      profilData.username = data.user.username;
+      profilData.avatar   = data.user.avatar   || 'https://i.pravatar.cc/100';
+      profilData.lokasi   = data.user.lokasi   || '';
+      profilData.bio      = data.user.bio      || '';
+      currentAvatar       = profilData.avatar;
+      updateNavAvatars();
+      showPage('page-beranda'); showToast(`👋 Selamat datang, ${data.user.nama}!`);
+    } else showToast('⚠️ ' + data.message);
+  } catch {
+    // Demo mode: login langsung (untuk tes tanpa backend)
+    doLoginDemo(email);
+  }
+}
+
+function doLoginDemo(email) {
+  // Demo: buat user fiktif berdasarkan email
+  const nama = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  currentUser = { id:99, nama, username:'@'+email.split('@')[0].toLowerCase(), email, avatar:'https://i.pravatar.cc/100?u='+email, lokasi:'', bio:'' };
+  profilData.nama     = currentUser.nama;
+  profilData.username = currentUser.username;
+  profilData.avatar   = currentUser.avatar;
+  profilData.lokasi   = '';
+  profilData.bio      = '';
+  currentAvatar       = currentUser.avatar;
+  updateNavAvatars();
+
+  // Inject dummy chatData untuk mode demo
+  injectDemoChat();
+
+  showPage('page-beranda'); showToast(`👋 Selamat datang, ${currentUser.nama}! (Mode Demo)`);
+}
+
+function injectDemoChat() {
+  chatData = {
+    'buyer_101': {
+      chat_id: 101, role: 'buyer', unread: 1,
+      contact: { id:3, nama:'Ayu Lestari', username:'@ayulestari', avatar:'https://i.pravatar.cc/100?img=25' },
+      produkContext: { id:3, nama:'Rice Cooker Miyako 1L', img:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&q=80', harga:85000 },
+      last_message: 'Halo kak, masih ada?',
+      messages: [
+        { type:'text', from:'outgoing', text:'Kak, masih ada rice cooker-nya?', time:'10:30' },
+        { type:'text', from:'incoming', text:'Masih ada kak! Kondisi bagus 😊', time:'10:32' },
+        { type:'nego', from:'outgoing', tawarHarga:65000, produkId:3, nego_status:'pending', time:'10:35' },
+        { type:'text', from:'incoming', text:'Maaf kak, penawaran belum bisa saya terima. Coba tawar lagi ya 🙏', time:'11:06' },
+      ]
+    },
+    'buyer_102': {
+      chat_id: 102, role: 'buyer', unread: 0,
+      contact: { id:2, nama:'Budi Santoso', username:'@budisantoso', avatar:'https://i.pravatar.cc/100?img=12' },
+      produkContext: { id:6, nama:'Meja Belajar Lipat', img:'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&q=80', harga:120000 },
+      last_message: 'Oke kak, deal!',
+      messages: [
+        { type:'text', from:'outgoing', text:'Kak mejanya masih ada? Buat belajar di kos nih', time:'09:00' },
+        { type:'text', from:'incoming', text:'Masih ada kak! Bisa dicek langsung kalau mau 😊', time:'09:05' },
+        { type:'nego', from:'outgoing', tawarHarga:100000, produkId:6, nego_status:'accepted', time:'09:10' },
+        { type:'text', from:'incoming', text:'Halo kak! Penawaran saya terima 🎉 Silakan siapkan untuk COD ya 😊', time:'09:12' },
+        { type:'deal', from:'incoming', tawarHarga:100000, produkId:6, deal_status:'done', time:'09:13' },
+      ]
+    },
+    'seller_103': {
+      chat_id: 103, role: 'seller', unread: 2,
+      contact: { id:5, nama:'Siti Rahayu', username:'@sitirahayu', avatar:'https://i.pravatar.cc/100?img=32' },
+      produkContext: { id:7, nama:'Kipas Angin Meja USB', img:'https://images.unsplash.com/photo-1563089145-599997674d42?w=400&q=80', harga:45000 },
+      last_message: 'Kak, boleh kurang ga?',
+      messages: [
+        { type:'text', from:'incoming', text:'Halo kak, kipas anginnya masih ada?', time:'13:00' },
+        { type:'text', from:'outgoing', text:'Masih ada kak! Kondisi mulus 😊', time:'13:05' },
+        { type:'nego', from:'incoming', tawarHarga:25000, produkId:7, nego_status:'pending', time:'13:10' },
+      ]
+    },
+    'seller_104': {
+      chat_id: 104, role: 'seller', unread: 0,
+      contact: { id:4, nama:'Dika Ramadhan', username:'@dikaramdhan', avatar:'https://i.pravatar.cc/100?img=15' },
+      produkContext: { id:5, nama:'Jaket Hoodie Polos Abu', img:'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80', harga:95000 },
+      last_message: 'Siap kak, deal!',
+      messages: [
+        { type:'text', from:'incoming', text:'Kak masih ada hoodie abu-abunya?', time:'08:00' },
+        { type:'nego', from:'incoming', tawarHarga:80000, produkId:5, nego_status:'accepted', time:'08:05' },
+        { type:'text', from:'outgoing', text:'Sip kak, penawaran diterima! COD ya 😊', time:'08:07' },
+        { type:'deal', from:'outgoing', tawarHarga:80000, produkId:5, deal_status:'done', time:'08:08' },
+      ]
+    },
+    'seller_105': {
+      chat_id: 105, role: 'seller', unread: 1,
+      contact: { id:6, nama:'Fajar Nugroho', username:'@fajarnugroho', avatar:'https://i.pravatar.cc/100?img=8' },
+      produkContext: { id:12, nama:'Earphone JBL Tune 110', img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80', harga:110000 },
+      last_message: 'Kak boleh 50rb ga? Mahasiswa nih 😅',
+      messages: [
+        { type:'text', from:'incoming', text:'Kak earphone JBL-nya masih ada?', time:'14:00' },
+        { type:'text', from:'outgoing', text:'Masih ada kak, kondisi bagus 😊', time:'14:03' },
+        { type:'nego', from:'incoming', tawarHarga:50000, produkId:12, nego_status:'pending', time:'14:05' },
+      ]
+    },
+    'buyer_103': {
+      chat_id: 106, role: 'buyer', unread: 0,
+      contact: { id:2, nama:'Budi Santoso', username:'@budisantoso', avatar:'https://i.pravatar.cc/100?img=12' },
+      produkContext: { id:11, nama:'Kursi Gaming Second', img:'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&q=80', harga:380000 },
+      last_message: '✅ Transaksi Selesai!',
+      messages: [
+        { type:'text', from:'outgoing', text:'Kak kursi gaming-nya masih ada?', time:'09:30' },
+        { type:'text', from:'incoming', text:'Masih kak! Mau liat dulu?', time:'09:33' },
+        { type:'nego', from:'outgoing', tawarHarga:330000, produkId:11, nego_status:'accepted', time:'09:40' },
+        { type:'text', from:'incoming', text:'Oke kak deal 330rb! COD aja ya 😊', time:'09:42' },
+        { type:'deal', from:'incoming', tawarHarga:330000, produkId:11, deal_status:'done', time:'09:45' },
+      ]
+    },
+  };
+}
+
+async function doDaftar() {
+  const nama  = document.getElementById('daftar-nama').value.trim();
+  const email = document.getElementById('daftar-email').value.trim();
+  const pass  = document.getElementById('daftar-pass').value.trim();
+  if (!nama || !email || !pass) { showToast('⚠️ Lengkapi semua data'); return; }
+  try {
+    const res  = await fetch('api/register.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ nama, email, password: pass }) });
+    const data = await res.json();
+    if (data.success) {
+      currentUser         = data.user;
+      profilData.nama     = data.user.nama;
+      profilData.username = data.user.username;
+      profilData.avatar   = data.user.avatar   || 'https://i.pravatar.cc/100';
+      profilData.lokasi   = data.user.lokasi   || '';
+      profilData.bio      = data.user.bio      || '';
+      currentAvatar       = profilData.avatar;
+      updateNavAvatars();
+      showPage('page-beranda'); showToast(`🎉 Akun berhasil dibuat! Selamat datang, ${data.user.nama}!`);
+    } else showToast('⚠️ ' + data.message);
+  } catch {
+    // Demo mode
+    const username = '@' + nama.toLowerCase().replace(/ /g,'.');
+    currentUser = { id:99, nama, username, email, avatar:'https://i.pravatar.cc/100?u='+email, lokasi:'', bio:'' };
+    profilData.nama     = nama;
+    profilData.username = username;
+    profilData.avatar   = currentUser.avatar;
+    profilData.lokasi   = '';
+    profilData.bio      = '';
+    currentAvatar = currentUser.avatar;
+    updateNavAvatars();
+    showPage('page-beranda'); showToast(`🎉 Selamat datang, ${nama}! (Mode Demo)`);
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  profilData  = { nama:'', username:'', bio:'', lokasi:'', avatar:'' };
+  savedItems  = new Set(); currentProduk = null;
+  currentKategori = 'Semua'; searchQuery = ''; selectedChatId = null;
+  chatData = {}; stopChatPolling();
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value  = '';
+  updateNavAvatars();
+  showPage('page-landing'); showToast('Berhasil keluar. Sampai jumpa!');
+  fetch('api/logout.php').catch(() => {});
+}
+
+// =============================================
+// TOAST
+// =============================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+async function loadGrafikSeller() {
+  if (!currentUser) return;
+  try {
+    const res = await fetch(`api/grafik_seller.php?seller_id=${currentUser.id}`);
+    const d = await res.json();
+    if (!d.success) return;
+    const canvas = document.getElementById('grafikSeller');
+    if (!canvas) return;
+    if (d.total_deal === 0) {
+      document.getElementById('grafik-empty-msg').style.display = 'block';
+      canvas.style.display = 'none';
+      return;
+    }
+    // Pastikan Chart.js ada
+    if (typeof Chart === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+      s.onload = () => buatGrafik(canvas, d);
+      document.head.appendChild(s);
+    } else {
+      buatGrafik(canvas, d);
+    }
+  } catch(e) {}
+}
+
+function buatGrafik(canvas, d) {
+  new Chart(canvas, {
+    data: {
+      labels: d.labels,
+      datasets: [
+        { type:'bar', label:'Jumlah Deal', data: d.jumlah, backgroundColor:'rgba(244,123,32,0.8)', borderRadius:6, yAxisID:'y' },
+        { type:'line', label:'Omzet (Rp)', data: d.omzet, borderColor:'#2196f3', backgroundColor:'rgba(33,150,243,0.1)', tension:0.4, fill:true, yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive:true, interaction:{mode:'index',intersect:false},
+      scales:{
+        y:  {beginAtZero:true, title:{display:true,text:'Jumlah Deal'}, ticks:{stepSize:1}},
+        y2: {beginAtZero:true, position:'right', grid:{drawOnChartArea:false}, ticks:{callback:v=>'Rp '+v.toLocaleString('id-ID')}}
+      }
+    }
+  });
+}
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Render grid dummy langsung walau masih di landing page (supaya saat pindah halaman sudah siap)
+  renderProdukGrid();
+  // Coba fetch dari API di background
+  loadProdukDariDB();
+});
+</script>
+</body>
+</html>
