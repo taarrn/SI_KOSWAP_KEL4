@@ -327,10 +327,10 @@
     .deal-card-info .deal-harga { font-weight: 900; font-size: 1.05rem; color: #2e7d32; }
     .deal-card-footer { background: #f1f8e9; padding: 9px 14px; font-size: 0.82rem; font-weight: 700; color: #558b2f; display: flex; align-items: center; gap: 7px; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; }
     .deal-card-footer-warn { background: #fff8e1; padding: 9px 14px; font-size: 0.82rem; font-weight: 700; color: #e65100; display: flex; align-items: center; gap: 7px; border-top: 1px solid #ffe0b2; border-radius: 0 0 14px 14px; }
-    .btn-konfirmasi-deal { width: 100%; padding: 11px 14px; background: #43a047; color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #c8e6c9; }
-    .btn-konfirmasi-deal:hover { background: #388e3c; }
-    .btn-terima-barang { width: 100%; padding: 11px 14px; background: #1976d2; color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #bbdefb; }
-    .btn-terima-barang:hover { background: #1565c0; }
+    .btn-konfirmasi-deal { width: 100%; padding: 11px 14px; background: #5c6bc0; color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #9fa8da; }
+    .btn-konfirmasi-deal:hover { background: #3949ab; }
+    .btn-terima-barang { width: 100%; padding: 11px 14px; background: var(--orange); color: #fff; font-weight: 800; font-size: 0.87rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; border-radius: 0 0 14px 14px; font-family: var(--font); cursor: pointer; border: none; border-top: 1px solid #f5d9b8; }
+    .btn-terima-barang:hover { background: var(--orange-dark); }
     .deal-done-bar { background: #e8f5e9; padding: 10px 14px; font-size: 0.85rem; font-weight: 800; color: #2e7d32; text-align: center; border-top: 1px solid #c8e6c9; border-radius: 0 0 14px 14px; }
 
     /* TOAST */
@@ -368,6 +368,25 @@
     .star-pick { font-size: 2.2rem; cursor: pointer; filter: grayscale(1); transition: filter 0.15s, transform 0.12s; }
     .star-pick.lit { filter: none; transform: scale(1.18); }
     .rating-label { text-align: center; font-weight: 800; font-size: 1rem; color: var(--orange); min-height: 1.4em; margin-bottom: 8px; }
+
+    /* ULASAN SECTION */
+    .ulasan-section { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .ulasan-section-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; color: var(--text-mid); margin-bottom: 14px; }
+    .ulasan-list { display: flex; flex-direction: column; gap: 12px; }
+    .ulasan-card { background: var(--cream); border-radius: 14px; padding: 14px 16px; border-left: 3px solid var(--orange); }
+    .ulasan-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .ulasan-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .ulasan-nama { font-weight: 800; font-size: 0.85rem; }
+    .ulasan-bintang { display: flex; gap: 1px; }
+    .ulasan-bintang .star { font-size: 0.78rem; }
+    .ulasan-tgl { font-size: 0.72rem; color: var(--text-light); margin-left: auto; }
+    .ulasan-komentar { font-size: 0.88rem; color: var(--text-dark); line-height: 1.5; font-style: italic; }
+    .ulasan-empty { font-size: 0.85rem; color: var(--text-light); text-align: center; padding: 20px; }
+    .ulasan-harga-deal { font-size: 0.75rem; color: var(--orange); font-weight: 700; margin-top: 4px; }
+    .ulasan-summary { display: flex; align-items: center; gap: 12px; background: var(--white); border: 2px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 14px; }
+    .ulasan-avg-score { font-size: 2.4rem; font-weight: 900; color: var(--text-dark); line-height: 1; }
+    .ulasan-avg-stars { display: flex; flex-direction: column; gap: 4px; }
+    .ulasan-avg-count { font-size: 0.78rem; color: var(--text-light); }
 
     /* EDIT PROFIL */
     .avatar-selector { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -543,6 +562,12 @@
             <button class="btn-outline-orange btn-sm" onclick="showPage('page-daftar')">Daftar</button>
           </div>
         </div>
+      </div>
+      <!-- SECTION ULASAN PEMBELI -->
+      <div class="ulasan-section">
+        <div class="detail-section-label" style="margin-top:0">ULASAN PEMBELI</div>
+        <div id="ulasan-summary"></div>
+        <div class="ulasan-list" id="ulasan-list"></div>
       </div>
     </div>
   </div>
@@ -1197,6 +1222,115 @@ function showDetail(id) {
   }
 
   showPage('page-detail');
+  // Render ulasan setelah halaman tampil
+  renderUlasan(p);
+}
+
+// =============================================
+// ULASAN
+// =============================================
+// Data ulasan dummy per penjual
+const ulasanDummy = {
+  1: [ // Rina Safira
+    { nama:'Budi S.', avatar:'https://i.pravatar.cc/100?img=12', rating:5, komentar:'Penjual ramah banget, barang sesuai deskripsi! Recommended 🙏', tgl:'2 hari lalu', hargaDeal:230000 },
+    { nama:'Dika R.', avatar:'https://i.pravatar.cc/100?img=15', rating:5, komentar:'COD lancar, barang kondisi bagus. Makasih kak Rina!', tgl:'1 minggu lalu', hargaDeal:55000 },
+    { nama:'Fajar N.', avatar:'https://i.pravatar.cc/100?img=8',  rating:4, komentar:'Oke banget, cuma agak lama balesnya. Overall puas deh', tgl:'2 minggu lalu', hargaDeal:75000 },
+    { nama:'Siti R.', avatar:'https://i.pravatar.cc/100?img=32', rating:5, komentar:'Barang mulus beneran, foto sama aslinya sama persis!', tgl:'3 minggu lalu', hargaDeal:90000 },
+  ],
+  2: [ // Budi Santoso
+    { nama:'Rina S.', avatar:'https://i.pravatar.cc/100?img=47', rating:5, komentar:'Laptop sesuai spek, kondisi mulus. Penjual jujur 👍', tgl:'1 hari lalu', hargaDeal:2600000 },
+    { nama:'Ayu L.', avatar:'https://i.pravatar.cc/100?img=25', rating:5, komentar:'Responnya cepat, COD di kampus. Sangat aman!', tgl:'5 hari lalu', hargaDeal:110000 },
+    { nama:'Siti R.', avatar:'https://i.pravatar.cc/100?img=32', rating:4, komentar:'Barang oke, sedikit beda dari foto tapi masih sesuai deskripsi', tgl:'1 minggu lalu', hargaDeal:300000 },
+    { nama:'Fajar N.', avatar:'https://i.pravatar.cc/100?img=8',  rating:5, komentar:'Gokil, kasur lipat-nya empuk banget! Worth it!', tgl:'2 minggu lalu', hargaDeal:290000 },
+    { nama:'Dika R.', avatar:'https://i.pravatar.cc/100?img=15', rating:5, komentar:'Penjual terpercaya, udah berkali-kali transaksi 🔥', tgl:'1 bulan lalu', hargaDeal:60000 },
+  ],
+  3: [ // Ayu Lestari
+    { nama:'Rina S.', avatar:'https://i.pravatar.cc/100?img=47', rating:5, komentar:'Rice cooker-nya masih bagus, masak nasi enak 😋', tgl:'3 hari lalu', hargaDeal:80000 },
+    { nama:'Budi S.', avatar:'https://i.pravatar.cc/100?img=12', rating:4, komentar:'Barang oke, cuma butuh dibersihkan dulu. Penjual baik', tgl:'1 minggu lalu', hargaDeal:55000 },
+    { nama:'Dika R.', avatar:'https://i.pravatar.cc/100?img=15', rating:5, komentar:'Ayu kak orangnya sabar, njelasin kondisi barang detail', tgl:'2 minggu lalu', hargaDeal:130000 },
+  ],
+  4: [ // Dika Ramadhan
+    { nama:'Siti R.', avatar:'https://i.pravatar.cc/100?img=32', rating:4, komentar:'Hoodie bagus, warnanya sesuai. Agak bau (wajar second), habis dicuci oke', tgl:'4 hari lalu', hargaDeal:80000 },
+    { nama:'Fajar N.', avatar:'https://i.pravatar.cc/100?img=8',  rating:5, komentar:'Beli celana jeans, kondisi 80% sesuai deskripsi. Puas!', tgl:'1 minggu lalu', hargaDeal:65000 },
+    { nama:'Rina S.', avatar:'https://i.pravatar.cc/100?img=47', rating:4, komentar:'Transaksi aman, tapi CW agak kecil ya', tgl:'3 minggu lalu', hargaDeal:50000 },
+  ],
+  5: [ // Siti Rahayu
+    { nama:'Budi S.', avatar:'https://i.pravatar.cc/100?img=12', rating:5, komentar:'Rak buku kokoh banget! Murah meriah, penjual juga helpful', tgl:'2 hari lalu', hargaDeal:160000 },
+    { nama:'Rina S.', avatar:'https://i.pravatar.cc/100?img=47', rating:5, komentar:'Power bank masih kenceng ngecasnya. Recommended!', tgl:'1 minggu lalu', hargaDeal:130000 },
+    { nama:'Dika R.', avatar:'https://i.pravatar.cc/100?img=15', rating:4, komentar:'Kaos putihnya bersih dan oke. Harga sangat terjangkau 👌', tgl:'2 minggu lalu', hargaDeal:40000 },
+  ],
+  6: [ // Fajar Nugroho
+    { nama:'Ayu L.', avatar:'https://i.pravatar.cc/100?img=25', rating:4, komentar:'Earphone masih jernih suaranya. Oke lah buat harga segitu', tgl:'5 hari lalu', hargaDeal:95000 },
+    { nama:'Budi S.', avatar:'https://i.pravatar.cc/100?img=12', rating:4, komentar:'Barang sesuai, penjual fast respon. Tapi lokasi COD agak jauh', tgl:'2 minggu lalu', hargaDeal:50000 },
+  ],
+};
+
+function renderUlasan(produk) {
+  const summaryEl = document.getElementById('ulasan-summary');
+  const listEl    = document.getElementById('ulasan-list');
+  if (!summaryEl || !listEl) return;
+
+  const penjualId = produk?.penjual?.id;
+  // Coba ambil dari dummy dulu, jika tidak ada generate berdasarkan rating penjual
+  let ulasanList = ulasanDummy[penjualId] || [];
+
+  // Coba fetch dari API (async, update setelah load)
+  if (penjualId) {
+    fetch(`api/rating.php?penjual_id=${penjualId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.data && data.data.length > 0) {
+          ulasanList = data.data.map(u => ({
+            nama: u.nama || 'Pembeli',
+            avatar: u.avatar || 'https://i.pravatar.cc/100',
+            rating: parseInt(u.rating),
+            komentar: u.komentar || '',
+            tgl: u.tgl || 'Baru saja',
+            hargaDeal: 0,
+          }));
+          renderUlasanList(summaryEl, listEl, ulasanList, produk.penjual);
+        }
+      }).catch(() => {});
+  }
+
+  renderUlasanList(summaryEl, listEl, ulasanList, produk.penjual);
+}
+
+function renderUlasanList(summaryEl, listEl, ulasanList, penjual) {
+  const rating = penjual?.rating || 0;
+  const ulasan = penjual?.ulasan || 0;
+
+  if (ulasan > 0) {
+    summaryEl.innerHTML = `
+      <div class="ulasan-summary">
+        <div class="ulasan-avg-score">${parseFloat(rating).toFixed(1)}</div>
+        <div class="ulasan-avg-stars">
+          <div class="stars-display">${renderStars(parseFloat(rating))}</div>
+          <div class="ulasan-avg-count">${ulasan} ulasan dari pembeli</div>
+        </div>
+      </div>`;
+  } else {
+    summaryEl.innerHTML = '';
+  }
+
+  if (ulasanList.length === 0) {
+    listEl.innerHTML = `<div class="ulasan-empty">Belum ada ulasan untuk penjual ini.<br>Jadilah yang pertama memberi ulasan!</div>`;
+    return;
+  }
+
+  listEl.innerHTML = ulasanList.map(u => `
+    <div class="ulasan-card">
+      <div class="ulasan-card-header">
+        <img class="ulasan-avatar" src="${u.avatar}" alt="${u.nama}" onerror="this.src='https://i.pravatar.cc/100'"/>
+        <div>
+          <div class="ulasan-nama">${u.nama}</div>
+          <div class="ulasan-bintang">${renderStarsSmall(u.rating)}</div>
+        </div>
+        <span class="ulasan-tgl">${u.tgl}</span>
+      </div>
+      ${u.komentar ? `<div class="ulasan-komentar">"${u.komentar}"</div>` : ''}
+      ${u.hargaDeal ? `<div class="ulasan-harga-deal">Deal: ${formatHarga(u.hargaDeal)}</div>` : ''}
+    </div>`).join('');
 }
 
 async function toggleSoldOut() {
